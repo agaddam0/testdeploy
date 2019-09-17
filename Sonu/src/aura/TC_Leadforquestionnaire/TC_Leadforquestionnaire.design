@@ -1,0 +1,7 @@
+<design:component>
+    <design:attribute name="header" label="Header"/>
+    <design:attribute name="objectName" label="Object Name"/>
+    <design:attribute name="hasFile" label="Show File"/>
+    <design:attribute name="recordTypeDeveloperName" label="Record Type Developer Name"/>
+    <design:attribute name="fields" label="Fields" required="true" />
+</design:component>

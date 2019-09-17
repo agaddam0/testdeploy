@@ -1,0 +1,6 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes">
+    <div class="slds-box card headerComponent">
+    	<div><img class="auto12" src="{!$Resource.tc_devopsheader}"/></div>
+       <div><p class="headerText"><h3>Salesforce DevOps Self-Assessment Wizard</h3></p></div> 
+    </div>
+</aura:component>

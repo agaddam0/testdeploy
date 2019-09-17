@@ -1,0 +1,160 @@
+<aura:component controller="TC_FinancialDetails" implements="forceCommunity:availableForAllPageTypes" access="global" >
+	<aura:attribute name="positiveAccountDetails" type="list"/>
+    <aura:attribute name="negativeAccountDetails" type="list"/>
+    <aura:attribute name="isNegativeInstrument" type="Boolean" default="false"/>
+    <aura:attribute name="isPositiveInstrument" type="Boolean" default="false"/>
+    <aura:attribute name="isOpen" type="Boolean" />
+    <aura:attribute name="accID" type="string"/>
+    <aura:attribute name="mapForRecordIdandRecordType" type="Map"/>
+    <aura:attribute name="recId" type="string"/>
+    <aura:attribute name="recTypeId" type="string"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+  <div style = "background-color: cadetblue;">
+    <div class="slds-m-around_x-large">
+        
+        <lightning:accordion allowMultipleSectionsOpen="true" activeSectionName="Savings OR Investments Details">
+            
+            <lightning:accordionSection name="Savings OR Investments Details" label="Savings OR Investments Details">
+               <aura:if isTrue="{!v.isPositiveInstrument}">   
+                <aura:set attribute="body">
+                    <lightning:layout  multipleRows="true">
+                        <aura:iteration items="{!v.positiveAccountDetails}" var="pad" indexVar="indx">
+                            <lightning:layoutItem size="3" padding="around-small">
+                                
+                               
+                                    <lightning:card variant="base" >
+                                        
+                                        <aura:set attribute="title">
+                                            <div class="slds-media__figure">
+                                                <lightning:icon iconName="custom:custom17" size="small"/>&nbsp;
+                                                
+                                              <!--  <u> <output data-selected-Index="{!pad.Id}" onclick="{!c.openModel}" type="text" value="{!pad.Name}" /> 
+                                                </u>-->
+                                           
+                                                
+                                                <a href="javascript:void(0)" id="link" class="slds-card__header-link slds-truncate" data-value="{!pad.Id}" onclick="{!c.openModel}" target="_blank">
+                                                    {!pad.Name}
+          										</a>  
+	
+                                                
+                                            </div>
+                                        </aura:set>
+                                        <div class="slds-card__body slds-card__body_inner">
+                                            <div class="slds-media__figure">
+                                                <b> Name Of The Account: </b><ui:outputText value="{!pad.Name}" /><br/> 
+                                                <b>Balance: </b>  <ui:outputText value="{!pad.FinServ__Balance__c}" /><br/>
+                                                <b>Minimum Balance: </b> <ui:outputText value="{!pad.FinServ__MinimumBalance__c}" /><br/>
+                                                
+                                            </div>
+                                        </div> 
+                                        
+                                    </lightning:card>
+                               
+                                
+                            </lightning:layoutItem>
+                        </aura:iteration>
+                    </lightning:layout>
+                </aura:set>
+                   </aura:if>
+                
+            </lightning:accordionSection>
+            
+        </lightning:accordion>
+    </div>
+     
+    
+    
+     
+    <div class="slds-m-around_x-large">
+        <lightning:accordion allowMultipleSectionsOpen="true">
+            
+            <lightning:accordionSection name="Credit Details" label="Credit Details" >
+               <aura:if isTrue="{!v.isNegativeInstrument}">
+                <aura:set attribute="body">
+                    <lightning:layout  multipleRows="true">
+                        
+                        <aura:iteration items="{!v.negativeAccountDetails}" var="nad">   
+                            <lightning:layoutItem size="3" padding="around-small">
+                                
+                               
+                                    <lightning:card variant="base" >
+                                        
+                                        <aura:set attribute="title">
+                                            <div class="slds-media__figure">
+                                                <lightning:icon iconName="action:download" size="small"/>&nbsp;
+                                              <!--
+                                                <u> <output data-selected-Index="{!nad.Id}" onclick="{!c.openModel}" type="text" value="{!nad.Name}" /> 
+                                                </u>-->
+                                                
+                                                 <a href="javascript:void(0)" id="link" class="slds-card__header-link slds-truncate" data-value="{!nad.Id}" onclick="{!c.openModel}" target="_blank">
+                                                    {!nad.Name}
+          										</a> 
+                                                
+                                            </div>
+                                        </aura:set>
+                                        <div class="slds-card__body slds-card__body_inner">
+                                            <div class="slds-media__figure">
+                                                <b> Name Of The Account:</b><ui:outputText value="{!nad.Name}" /><br/> 
+                                                <b>Balance:</b>  <ui:outputText value="{!nad.FinServ__Balance__c}" /><br/>
+                                                <b>Payment Due Date:</b> <ui:outputText value="{!nad.FinServ__PaymentDueDate__c}" /><br/>
+                                                
+                                            </div>
+                                        </div> 
+                                    </lightning:card>
+                                
+                                
+                            </lightning:layoutItem>
+                        </aura:iteration>
+                    </lightning:layout>
+                </aura:set>
+                
+         </aura:if>
+            </lightning:accordionSection>
+            
+        </lightning:accordion>
+    </div>
+   
+     <aura:if isTrue="{!v.isOpen}">
+        
+       
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Account Details</h2>
+                    
+                </header>
+                
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:recordForm
+                                          recordId="{!v.recId}"
+                                          recordTypeId="{!v.recTypeId}"
+                                          objectApiName="FinServ__FinancialAccount__c"
+                                          layoutType="Full"
+                                          columns="2"
+                                          mode="readonly" /> 
+                    
+                </div>
+                
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral" 
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.closeModel }"/>
+                    
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        
+        
+    </aura:if>   
+
+</div> 
+</aura:component>

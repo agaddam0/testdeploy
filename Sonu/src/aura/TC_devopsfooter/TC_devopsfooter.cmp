@@ -1,0 +1,36 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes">
+<div class="slds-grid footermain" >
+  <div class="slds-col slds-order_2 slds-large-order_1">  
+    <img class="footer"
+         src="{!$Resource.tc_devopsfooter}"/></div>
+    <div class="slds-col slds-order_1 slds-large-order_2">
+    <img class="footer1"
+        src="{!$Resource.tc_devopsfooter1}"/>
+    </div>
+    </div>
+    <div class="rowMain">
+<div class="row">
+ 
+     <a class="social__link" target="_blank" rel="noopener" href="https://www.linkedin.com/company/teksystems?">
+    <span class="access"><img src="{!$Resource.Linkedln}"/></span></a>
+      
+
+    <a class="social__link" target="_blank" rel="noopener" href="https://www.facebook.com/teksystems/">
+    <span class="access"><img src="{!$Resource.fbImage}"/></span></a>
+    
+    
+    <a class="social__link" target="_blank" rel="noopener" href="https://www.youtube.com/user/TEKsystems08">
+    <span class="access"><img src="{!$Resource.Youtube}"/></span></a>
+      
+
+    <a class="social__link" target="_blank" rel="noopener" href="https://twitter.com/TEKsystems">
+    <span class="access"><img src="{!$Resource.twitter}"/></span></a>
+       
+
+    <a class="social__link" target="_blank" rel="noopener" href="https://www.instagram.com/teksystems/">
+    <span class="access"><img src="{!$Resource.Instagram}"/></span></a>
+    
+
+</div> 
+</div>
+</aura:component>

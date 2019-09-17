@@ -1,0 +1,56 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" controller="TC_CreateRecordCtlr">
+    <aura:attribute name="header" type="String"/>
+    <aura:attribute name="hasFile" type="Boolean" default="false"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+    <aura:attribute name="objectName" type="String"/>
+    <aura:attribute name="recordTypeDeveloperName" type="String"/>
+    <aura:attribute name="fields" type="String"/>
+    <aura:attribute name="fieldData" type="List" default="[]"/>
+    <aura:attribute name="recordTypeId" type="String"/>
+    <aura:attribute name="error" type="String" default=""/>
+    <aura:attribute name="showCmp" type="Boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:if isTrue="{!v.showSpinner}">
+    	<lightning:spinner alternativeText="Loading" size="medium" />
+    </aura:if>
+    
+    <aura:if isTrue="{!!empty(v.error)}">
+        <div align="center" class="errorClass">
+            {!v.error}
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.showCmp}">
+        <div class="slds-box slds-brand-band">
+            <div class="slds-text-heading_medium" align="center">
+                {!v.header}
+            </div>
+            <lightning:recordEditForm
+                                      objectApiName="{!v.objectName}"
+                                      recordTypeId ="{!v.recordTypeId}"
+                                      onsubmit="{!c.onSubmitHandler}"
+                                      onsuccess="{!c.onSuccessHandler}"
+                                      onerror="{!c.onErrorHandler}">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-1">
+                    	<lightning:messages/>
+                    </div>
+                     <aura:iteration items="{!v.fieldData}" var="field">
+                         <div class="slds-col slds-size_1-of-2">
+                             <lightning:inputField fieldName="{!field}"/>
+                         </div>
+                    </aura:iteration>
+                    <div class="slds-col slds-size_1-of-1">
+                    	<div align="center">
+                            <lightning:button label="Cancel" title="Cancel" type="button" onclick="{!c.cancelClicked}"/>
+                            <lightning:button variant="brand" label="Save" type="submit" title="save"/>
+                        </div>
+                    </div>
+                </div>
+            </lightning:recordEditForm>
+        </div>
+    </aura:if>
+    
+</aura:component>

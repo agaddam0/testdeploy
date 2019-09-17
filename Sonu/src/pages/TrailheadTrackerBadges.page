@@ -1,0 +1,247 @@
+<apex:page sidebar="false" showHeader="false" title="Trailhead Tracker Badges" cache="true" controller="TrailheadTrackerBadgesController" standardStylesheets="false" >
+    
+    <style>
+        .content {
+        min-height: calc(100vh - 53px);
+        }
+        .footer {
+        height: 50px;
+        }
+        select {
+        text-align: center;
+        text-align-last: center;
+        /* webkit*/
+        }
+        
+        
+    </style>
+    
+    <script>
+    function toggleBadgeCard(badgeApiName)
+    {
+        var BadgeBody = document.getElementById("badgeBody : "+badgeApiName);
+        
+        if(BadgeBody.classList.contains("slds-hide"))
+            BadgeBody.classList.remove("slds-hide");
+        else
+            BadgeBody.classList.add("slds-hide");
+        
+    }
+    function sortByChanged(sortByElement)
+    {
+        reSortBadges(sortByElement.value);
+    }
+    function triggerSearch(event)
+    {
+        var searchInput = (document.getElementById("searchInput")).value;
+        if (event.keyCode === 13 || searchInput == '') 
+        {
+            (document.getElementById("searchInput")).value;
+            (document.getElementById("sortby")).value = 'default';
+            callSearchMethod(searchInput);  
+        }
+    }
+    function clearSearch()
+    {
+        (document.getElementById("searchInput")).value = '';  
+        (document.getElementById("sortby")).value = 'default';
+        callSearchMethod('');
+    }
+    function liveClicked()
+    {
+        liveButtonClicked();
+    }
+    </script>
+    
+    <apex:slds />
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        
+        <apex:form >
+            <apex:actionFunction name="reSortBadges" action="{!reSortBadges}" rerender="badgesCard" status="loading">     
+                <apex:param id="sortByValue" name="sortByValue" value="" />
+            </apex:actionFunction>
+            <apex:actionFunction name="callSearchMethod" action="{!setSeachKeyword}" rerender="badgesCard" status="loading">     
+                <apex:param id="searchInput" name="searchInput" value="" />
+            </apex:actionFunction>
+            <apex:actionFunction name="liveButtonClicked" action="{!reRunBatch}" status="loading"/>
+        </apex:form>
+        
+        
+        
+        <div class="slds-scope">
+            
+            <div class="content">
+                <article class="slds-border_bottom">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-reward">
+                                    <svg aria-hidden="true" class="slds-icon">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#reward')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Team's Badges</span>
+                                </span>
+                                
+                            </div>
+                            <div class="slds-media__body">
+                                <h2>
+                                    <span class="slds-text-heading_medium">Team's Badges</span>
+                                    <br/> 
+                                    
+                                </h2>
+                            </div>
+                        </header>
+                        <div class="slds-no-flex">
+                            <apex:outputPanel rendered="{! !batchesProcessing}">
+                                <span class="slds-button slds-button_success" style="color: white" onclick="liveClicked();" id="liveButton">LIVE</span>
+                            </apex:outputPanel> 
+                            <a class="slds-button slds-button_neutral" href="/trailheadtracker/trailheadtrackerhome">Back to Home</a>
+                        </div>
+                    </div>
+                </article>
+                <div class="slds-grid ">
+                    <span class="slds-col slds-size_10-of-12 slds-p-around_small">
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left-right">
+                            <svg class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search" />
+                            </svg>
+                            <input type="text" id="searchInput" class="slds-input" 
+                                   placeholder="Enter badge's name and press Enter to search" value="{!searchKeyword}" onkeyup="triggerSearch(event)"/>
+                        </div>
+                    </span>
+                    <span class="slds-col slds-size_2-of-12 slds-p-around_small">
+                        <select class="slds-select" id="sortby" onchange="sortByChanged(this);">
+                            <option selected="true" disabled="true" value="default">&nbsp;&nbsp;-- Sort By --&nbsp;&nbsp;</option>
+                            <option value="Newest">&nbsp;Newest</option>
+                            <option value="Completed By Count">&nbsp;Completed By Count</option>
+                            <option value="Name">&nbsp;Name</option>
+                            <option value="Type">&nbsp;Type</option>
+                        </select>
+                    </span>
+                </div>
+                
+                <apex:outputPanel rendered="{! batchesProcessing}" 
+                                  styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-box slds-align_absolute-center slds-m-around_small slds-m-around_small slds-text-heading_small" style="color: white">
+                    The stats are currently getting&nbsp;<a href="/trailheadtracker/trailheadtrackersystemstatus" style="color: white" target="_blank">updated</a>. Kindly refresh (maybe more than one time) the page to see the latest data.
+                </apex:outputPanel>
+                <apex:outputPanel id="badgesCard">
+                    <apex:repeat value="{!listBadges}" var="BadgeData" >
+                        <div class="slds-card slds-m-around_small" >      
+                            <div class="slds-card__header slds-grid slds-wrap" id="badgeHeader : {!BadgeData.apiName}" onclick="toggleBadgeCard('{!BadgeData.apiName}');" style="cursor: pointer; " title="Click to Toggle Members" >
+                                <div class="slds-col slds-size_9-of-12" >
+                                    <div class="slds-media slds-media_center slds-has-flexi-truncate">
+                                        <div class="slds-media__figure">
+                                            <a href="{!BadgeData.path}" target="_blank" title="View on Trailhead">
+                                                <img src="{!BadgeData.imageSrc}" alt="{!BadgeData.name}" width="50" height="50"/> 
+                                            </a>
+                                        </div>
+                                        <div class="slds-media__body">
+                                            <span class="slds-text-heading_small">
+                                                <a href="{!BadgeData.path}" target="_blank" title="View on Trailhead">{!BadgeData.name}</a>
+                                            </span>
+                                            <br/>{!BadgeData.type} 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_3-of-12" >
+                                    <div class="slds-progress-bar slds-progress-bar_circular slds-progress-bar_large" 
+                                         aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" role="progressbar">
+                                        <span class="slds-progress-bar__value" 
+                                              style="width: {! (BadgeData.completedBy.size/(BadgeData.completedBy.size + BadgeData.remainingUsers.size))*100}%;">
+                                            <span class="slds-assistive-text">Progress: {! (BadgeData.completedBy.size/(BadgeData.completedBy.size + BadgeData.remainingUsers.size))*100}%</span>
+                                        </span>
+                                        <div class="slds-text-align--right slds-p_around_small">
+                                            {! BadgeData.completedBy.size} of {!(BadgeData.completedBy.size + BadgeData.remainingUsers.size)} members have completed this badge
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="slds-card__body slds-border_top slds-p-around_small slds-hide" id="badgeBody : {!BadgeData.apiName}" >
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_6-of-12 slds-border_right">
+                                        <div class="slds-align_absolute-center ">
+                                            <div class="slds-grid slds-wrap" >
+                                                <apex:repeat value="{!BadgeData.completedBy}" var="UserData">
+                                                    <span class="slds-p-around_x-small ">
+                                                        <span class="slds-avatar slds-avatar_large slds-avatar_circle">
+                                                            <a href="/trailheadtracker/trailheadtrackerdetails?id={!UserData.id}" target="_blank" style="text-decoration:none; cursor: pointer; ">
+                                                                <apex:outputPanel rendered="{! UserData.profilePicture != '/assets/astro-vatar-aea32d8b76aaf20630d792922308031ac971cb5597042217981872707d435280.svg'}">
+                                                                    <img src="{!UserData.profilePicture}" alt="{!UserData.name}"  title="{!UserData.name}"/>
+                                                                </apex:outputPanel>
+                                                                <apex:outputPanel rendered="{! UserData.profilePicture == '/assets/astro-vatar-aea32d8b76aaf20630d792922308031ac971cb5597042217981872707d435280.svg'}">
+                                                                    <abbr class="slds-avatar__initials slds-icon-standard-user" title="{!UserData.name}" style="color: white"  >{!UserData.initials}</abbr>
+                                                                </apex:outputPanel>
+                                                            </a>
+                                                        </span>      
+                                                    </span>
+                                                </apex:repeat>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <div class="slds-align_absolute-center">
+                                            <div class="slds-grid slds-wrap">
+                                                <apex:repeat value="{!BadgeData.remainingUsers}" var="UserData">
+                                                    <span class="slds-p-around_x-small ">
+                                                        <span class="slds-avatar slds-avatar_large slds-avatar_circle">
+                                                            <a href="/trailheadtracker/trailheadtrackerdetails?id={!UserData.id}" target="_blank" style="text-decoration:none;">
+                                                                <apex:outputPanel rendered="{! UserData.profilePicture != '/assets/astro-vatar-aea32d8b76aaf20630d792922308031ac971cb5597042217981872707d435280.svg'}">
+                                                                    <img src="{!UserData.profilePicture}" alt="{!UserData.name}"  title="{!UserData.name}"/>
+                                                                </apex:outputPanel>
+                                                                <apex:outputPanel rendered="{! UserData.profilePicture == '/assets/astro-vatar-aea32d8b76aaf20630d792922308031ac971cb5597042217981872707d435280.svg'}">
+                                                                    <abbr class="slds-avatar__initials slds-icon-standard-user" title="{!UserData.name}" style="color: white">{!UserData.initials}</abbr>
+                                                                </apex:outputPanel>                              
+                                                            </a>
+                                                        </span>
+                                                    </span>
+                                                </apex:repeat>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </apex:repeat>
+                    <apex:outputPanel rendered="{!searchKeyword != ''}" styleClass="slds-p-around_small" >
+                        <button class="slds-button slds-button_destructive slds-align_absolute-center" onclick="clearSearch()">Clear Search</button>
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </div>
+            
+            <apex:actionStatus id="loading">
+                <apex:facet name="start">
+                    <div role="status" class="slds-spinner slds-spinner_large slds-spinner_brand">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </apex:facet>
+            </apex:actionStatus>
+            
+            <div class="footer">
+                <div class="slds-grid slds-wrap slds-border_top slds-p-around_small" >
+                    <div class="slds-col slds-size_4-of-12">
+                        <span style="float: left;">
+                            Need Help?&nbsp;<a href="mailTo:snandan@teksystems.com" target="_blank">Contact</a>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <span class="slds-align_absolute-center">
+                            Trailhead Tracker
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <span style="float: right;">
+                            Shashwat Nandan&nbsp;|&nbsp;TEKsystems
+                        </span>
+                    </div>
+                </div>
+            </div> 
+            
+        </div>
+        
+    </html>
+</apex:page>

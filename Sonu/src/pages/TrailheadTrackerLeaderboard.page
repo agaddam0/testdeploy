@@ -1,0 +1,62 @@
+<apex:page sidebar="false" showHeader="false" title="Trailhead Tracker Leaderboard" cache="true"  contentType="application/vnd.ms-excel#Trailhead Tracker Leaderboard - {!leaderboardFilter} ({!DAY(TODAY())}-{!MONTH(TODAY())}-{!YEAR(TODAY())}).xls" standardStylesheets="false" controller="TrailheadTrackerHomeController">
+    <!-- <apex:outputText>
+<b>
+{!IF(leaderboardFilter=='AllTime', 'All Time', IF(leaderboardFilter=='Last30Days', 'Last 30 Days', IF(leaderboardFilter=='Last5Days', 'Last 5 Days', '')))}
+</b>
+</apex:outputText> -->
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">
+                    <div>Name</div>
+                </th>
+                <th scope="col">
+                    <div>Rank</div>
+                </th>
+                <th scope="col">
+                    <div>Tracker Score</div>
+                </th>
+                <th scope="col">
+                    <div>Badges</div>
+                </th>
+                <th scope="col">
+                    <div>Points</div>
+                </th>
+                <th scope="col">
+                    <div>Superbadges</div>
+                </th>
+                <th scope="col">
+                    <div>Trails Completed</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <apex:repeat value="{!trailheadUsers}" var="trailheadUser">
+                <tr>
+                    <th scope="row" data-label="Name">
+                        <div ><a href="{!$Site.BaseUrl}/trailheadtrackerdetails?id={!trailheadUser.Id}" target="_blank">{!trailheadUser.Name}</a></div>
+                    </th>
+                    <td data-label="Rank">
+                        <div >{!trailheadUser.rank}</div>
+                    </td>
+                    <td data-label="Tracker Score">
+                        <div>{!trailheadUser.trackerScore}</div>
+                    </td>
+                    <td data-label="Badges">
+                        <div>{!trailheadUser.totalBadges}</div>
+                    </td>
+                    <td data-label="Points">
+                        <div >{!trailheadUser.totalPoints}</div>
+                    </td>
+                    <td data-label="Superbadges">
+                        <div >{!trailheadUser.totalSuperbadges}</div>
+                    </td>
+                    <td data-label="Trails Completed">
+                        <div >{!trailheadUser.totalTrails}</div>
+                    </td>
+                </tr>
+            </apex:repeat>
+        </tbody>
+    </table>
+    
+</apex:page>

@@ -1,0 +1,21 @@
+.THIS .auto12{
+    max-width: 105%;
+    height: 3%;
+    
+}
+.THIS.card{
+    margin-top:-3.3%;
+}
+.THIS.card{
+    border-width: 1.2px;
+    border-color: #bbb;
+}
+.THIS .headerText{
+    font-size: large;
+    margin-top: -43px;
+    text-align: right;
+    padding-right: 15px;
+    font-family: auto;
+    color: rgb(6, 28, 63);
+    font-weight: bold;
+}

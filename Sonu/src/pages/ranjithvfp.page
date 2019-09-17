@@ -1,0 +1,16 @@
+<apex:page standardController="Case" extensions="CMSCasesController" recordSetVar="cases">
+    <apex:includeLightning />
+    
+    <div id="FlipcardContainer" />
+    
+    <script>
+    $Lightning.use("c:cmscaseownapp", function() {
+        $Lightning.createComponent("c:cmscaseowncmp",{ "recordId" : "{!$CurrentPage.parameters.id}","recordsId":{!IDS} }
+                                   ,
+                                   "FlipcardContainer",
+                                   function(cmp) {
+                                       console.log('Component created, do something cool here');
+                                   });
+    });
+    </script>
+</apex:page>

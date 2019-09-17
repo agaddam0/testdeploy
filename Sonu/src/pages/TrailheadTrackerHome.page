@@ -1,0 +1,439 @@
+<apex:page sidebar="false" showHeader="false" title="Trailhead Tracker Home" cache="true"  
+           standardStylesheets="true" controller="TrailheadTrackerHomeController">
+    
+    <script>
+    function newUserClicked()
+    {
+        resetAlert();
+        var newUserCard = document.getElementById("newUserCard");
+        newUserCard.classList.remove("slds-hide");
+        var newUserButton = document.getElementById("newUserButton");
+        newUserButton.classList.add("slds-hide");
+        
+    }
+    function cancelClicked()
+    {
+        resetAlert();
+        var newUserCard = document.getElementById("newUserCard");
+        newUserCard.classList.add("slds-hide");
+        var newUserButton = document.getElementById("newUserButton");
+        newUserButton.classList.remove("slds-hide");
+        
+    }
+    function submitClicked()
+    {
+        var trailheadIdInput = (document.getElementById("trailheadIdInput")).value;
+        saveTrailheadUser(trailheadIdInput.trim());
+    }
+    function liveClicked()
+    {
+        liveButtonClicked();
+    }
+    
+    </script>
+    <style>
+        .slds-scope [hidden], .slds-scope template {
+        display: block;
+        }
+        .content {
+        min-height: calc(100vh - 53px);
+        }
+        .footer {
+        height: 50px;
+        }
+        
+        
+        
+    </style>
+    
+    <apex:slds />
+    
+    
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        
+        <apex:form >
+            <apex:actionFunction name="saveTrailheadUser" action="{!saveTrailheadUser}" rerender="card" status="loading">     
+                <apex:param id="trailheadId" name="trailheadId" value="" />
+            </apex:actionFunction>
+            <apex:actionFunction name="resetAlert" action="{!resetAlert}" rerender="card" />
+            <apex:actionFunction name="liveButtonClicked" action="{!reRunBatch}" status="loading"/>
+            
+        </apex:form>
+        
+        <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <div role="status" class="slds-spinner slds-spinner_large slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </apex:facet>
+        </apex:actionStatus>
+        
+        <div class="slds-scope">
+            <div class="content">
+                
+                <article class="slds-border_bottom">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-feed">
+                                    <svg aria-hidden="true" class="slds-icon">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#feed')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Tracker Icon</span>
+                                </span>
+                                
+                            </div>
+                            <div class="slds-media__body">
+                                <h2>
+                                    <span class="slds-text-heading_medium">Trailhead Tracker</span>
+                                    <br/>An application that tracks Trailhead stats for TEKsystems SFDC team.
+                                </h2>
+                            </div>
+                        </header>
+                        <div class="slds-no-flex">
+                            <apex:outputPanel rendered="{! !batchesProcessing}">
+                                <span class="slds-button slds-button_success" style="color: white" onclick="liveClicked();" id="liveButton">LIVE</span>
+                                <button class="slds-button slds-button_brand" onclick="newUserClicked();" id="newUserButton">New Here?</button>
+                            </apex:outputPanel> 
+                        </div>
+                    </div>
+                </article>
+                
+                <div class="slds-card slds-m-around_small slds-hide" id="newUserCard">
+                    
+                    <div class="slds-card__header" >
+                        <div class="slds-text-heading_x-small ">
+                            <apex:outputPanel id="card" >
+                                
+                                <apex:outputPanel rendered="{!stranger}">
+                                    Hi there, Stranger! Are you a TEK Systems Employee interested in being part of the TEK Systems Trailhead Tracker? 
+                                    <br/>Just follow the steps below and you'll be set up in no time.
+                                    <ol class="slds-list_ordered">
+                                        <li>Login to your <a href="https://trailhead.salesforce.com" target="_blank">Trailhead</a> account. If you do not have an account, Sign Up for one.  </li>
+                                        <li>Go to your Profile page, scroll down to the About Me section and edit it save the Profile Visibility as 'Public' </li>
+                                        <li>From the Profile page URL, copy the your 18-digit Trailhead Id. If you have a custom URL, remove it for a moment, copy your Id and add the URL back.</li>
+                                    </ol>
+                                    <div class="slds-grid slds-m-top_small">
+                                        <div class="slds-col slds-form-element slds-m-right_small" >
+                                            <div class="slds-form-element__control">
+                                                <input type="text" id="trailheadIdInput" class="slds-input" placeholder="Paste your 18-digit Trailhead Id here" />                                        
+                                            </div>
+                                        </div>
+                                        <div class="slds-no-flex slds-m-right_small">
+                                            <button class="slds-button slds-button_brand" onclick="submitClicked();">Submit</button>
+                                        </div>
+                                        <div class="slds-no-flex">
+                                            <button class="slds-button slds-button_neutral" onclick="cancelClicked();">Cancel</button>
+                                        </div>
+                                        
+                                    </div>
+                                    <apex:outputPanel styleClass="slds-align_absolute-center slds-text-color_error" >
+                                        <apex:pageMessage severity="error" rendered="{!error}" >{!errorMessage}</apex:pageMessage>
+                                    </apex:outputPanel>
+                                    
+                                </apex:outputPanel>   
+                                
+                                <apex:outputPanel rendered="{! !stranger}">
+                                    {!welcomeMessage}
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <apex:outputPanel rendered="{! batchesProcessing}" 
+                                  styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-box slds-align_absolute-center slds-m-around_small slds-m-around_small slds-text-heading_small" style="color: white">
+                    The stats are currently getting&nbsp;<a href="/trailheadtracker/trailheadtrackersystemstatus" style="color: white" target="_blank">updated</a>. Kindly refresh (maybe more than one time) the page to see the latest data.
+                </apex:outputPanel>
+                
+                <article class="slds-card slds-m-around_small">
+                    
+                    <div class="slds-card__header slds-clearfix">
+                        <div class="slds-float_left slds-text-heading_medium ">The Leaderboard</div>
+                        <div class="slds-float_right">
+                            <apex:form id="leaderboardFilters">
+                                <div class="slds-button-group" role="group">
+                                    <apex:outputPanel rendered="{! !batchesProcessing}">
+                                        <a class="slds-button slds-button_destructive" href="/trailheadtracker/trailheadtrackerleaderboard?leaderboardFilter={!leaderboardFilter}" >
+                                            Export to Excel
+                                        </a>
+                                    </apex:outputPanel>
+                                    
+                                    <apex:commandButton styleClass="{!IF(leaderboardFilter == 'Last5Days', 'slds-button slds-button_brand', 'slds-button slds-button_neutral') }"
+                                                        action="{!leaderboardFilterChanged}" reRender="leaderboardFiltersPanel, leaderboardFilters" value="Last 5 Days" status="loading">
+                                        <apex:param name="leaderboardFilter" value="Last5Days" assignTo="{!leaderboardFilter}" />
+                                    </apex:commandButton>
+                                    <apex:commandButton styleClass="{!IF(leaderboardFilter == 'Last30Days', 'slds-button slds-button_brand', 'slds-button slds-button_neutral') }"
+                                                        action="{!leaderboardFilterChanged}" reRender="leaderboardFiltersPanel, leaderboardFilters" value="Last 30 Days" status="loading">
+                                        <apex:param name="leaderboardFilter" value="Last30Days" assignTo="{!leaderboardFilter}" />
+                                    </apex:commandButton>
+                                    <apex:commandButton styleClass="{!IF(leaderboardFilter == 'AllTime', 'slds-button slds-button_brand', 'slds-button slds-button_neutral') }"
+                                                        action="{!leaderboardFilterChanged}" reRender="leaderboardFiltersPanel, leaderboardFilters" value="All Time" status="loading">
+                                        <apex:param name="leaderboardFilter" value="AllTime" assignTo="{!leaderboardFilter}" />
+                                    </apex:commandButton>
+                                    
+                                </div>  
+                            </apex:form>
+                        </div>
+                    </div>
+                    <apex:outputPanel id="leaderboardFiltersPanel" >
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer  ">
+                            <thead>
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Name">Name</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Rank">Rank</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-align_absolute-center " title="The Tracker Score estimates a user's performance relative to the team. The rating, which takes in consideration a number of factors such as unique badges the user has with respect to the team, is calculted out of 100.">Tracker Score</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-align_absolute-center " title="Badges">Badges</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-align_absolute-center " title="Points">Points</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-align_absolute-center " title="Superbadges">Superbadges</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-align_absolute-center " title="Trails Completed">Trails Completed</div>
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <apex:repeat value="{!trailheadUsers}" var="trailheadUser">
+                                    <tr>
+                                        <th scope="row" data-label="Name">
+                                            <div class="slds-truncate"><a href="/trailheadtracker/trailheadtrackerdetails?id={!trailheadUser.id}" target="_blank">{!trailheadUser.name}</a></div>
+                                        </th>
+                                        <td data-label="Rank">
+                                            <div class="slds-truncate">{!trailheadUser.rank}</div>
+                                        </td>
+                                        <td data-label="Tracker Score">
+                                            <div class="slds-align_absolute-center ">{!trailheadUser.trackerScore}</div>
+                                        </td>
+                                        <td data-label="Badges">
+                                            <div class="slds-truncate slds-align_absolute-center  {!IF(trailheadUser.totalBadges < averageTeamBadges, 'slds-text-color_error', '') }" 
+                                                 title="Team Average: {!averageTeamBadges}">{!trailheadUser.totalBadges}</div>
+                                        </td>
+                                        <td data-label="Points">
+                                            <div class="slds-truncate slds-align_absolute-center  {!IF(trailheadUser.totalPoints < averageTeamPoints, 'slds-text-color_error', '') }" 
+                                                 title="Team Average: {!averageTeamPoints}">{!trailheadUser.totalPoints}</div>
+                                        </td>
+                                        <td data-label="Superbadges">
+                                            <div class="slds-truncate slds-align_absolute-center  {!IF(trailheadUser.totalSuperbadges < averageTeamSuperbadges, 'slds-text-color_error', '') }" 
+                                                 title="Team Average: {!averageTeamSuperbadges}">{!trailheadUser.totalSuperbadges}</div>
+                                        </td>
+                                        <td data-label="Trails Completed">
+                                            <div class="slds-truncate slds-align_absolute-center  {!IF(trailheadUser.totalTrails < averageTeamTrails, 'slds-text-color_error', '') }" 
+                                                 title="Team Average: {!averageTeamTrails}">{!trailheadUser.totalTrails}</div>
+                                        </td>
+                                        
+                                    </tr>
+                                </apex:repeat>
+                                
+                            </tbody>
+                            
+                        </table>
+                        <p class="slds-align_absolute-center slds-p-around_small" >
+                            <apex:outputText rendered="{!trailheadUsers == null || trailheadUsers.size == 0}">No users found</apex:outputText>
+                        </p>
+                        
+                    </apex:outputPanel>
+                </article>
+                
+                <div class="slds-card slds-m-around_small slds-p-around_small" style="background-color: white">
+                    <p class="slds-text-heading_medium slds-align_absolute-center"> 
+                        <apex:outputText value="{0, number, ###,###,###}">
+                            <apex:param value="{!totalTeamBadges}"/> 
+                        </apex:outputText> Badges, 
+                        <apex:outputText value="{0, number, ###,###,###}">
+                            <apex:param value="{!totalTeamPoints}"/>
+                        </apex:outputText> Points... And this is just the  beginning! </p>
+                    
+                    
+                    <div class="slds-grid slds-p-top_small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <div  class="slds-align_absolute-center">
+                                <apex:chart data="{!badgeTypeCountList}" height="400" width="500" animate="true">
+                                    <apex:legend position="right" padding="10"/>
+                                    <apex:pieSeries labelField="badgeType" dataField="count" donut="40">
+                                        <apex:chartLabel display="none" orientation="vertical" 
+                                                         font="bold 18px Helvetica"/>
+                                    </apex:pieSeries>
+                                </apex:chart>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-2">
+                            <div  class="slds-align_absolute-center">
+                                <apex:chart data="{!teamMemberRankCountList}" height="400" width="500" animate="true">
+                                    <apex:legend position="right" padding="10"/>
+                                    <apex:pieSeries labelField="rank" dataField="memberCount"  donut="40">
+                                        <apex:chartLabel display="none" orientation="vertical" 
+                                                         font="bold 18px Helvetica"/>
+                                    </apex:pieSeries>
+                                </apex:chart>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <div class="slds-card slds-m-around_small" >
+                    <div class="slds-card__header  slds-clearfix">
+                        <div class="slds-text-heading_medium slds-float_left">Team's Performance</div>
+                        <div class="slds-float_right">
+                            <apex:form id="chartFilters">
+                                
+                                <div class="slds-button-group" role="group">
+                                    <apex:commandButton styleClass="{!IF(chartFilter == 'Last5Days', 'slds-button slds-button_brand', 'slds-button slds-button_neutral') }"
+                                                        action="{!chartFilterChanged}" reRender="chartsPanel, chartFilters" value="Last 5 Days" status="loading">
+                                        <apex:param name="chartFilter" value="Last5Days" assignTo="{!chartFilter}" />
+                                    </apex:commandButton>
+                                    <apex:commandButton styleClass="{!IF(chartFilter == 'Last30Days', 'slds-button slds-button_brand', 'slds-button slds-button_neutral') }"
+                                                        action="{!chartFilterChanged}" reRender="chartsPanel, chartFilters" value="Last 30 Days" status="loading">
+                                        <apex:param name="chartFilter" value="Last30Days" assignTo="{!chartFilter}" />
+                                    </apex:commandButton>
+                                    <apex:commandButton styleClass="{!IF(chartFilter == 'AllTime', 'slds-button slds-button_brand', 'slds-button slds-button_neutral') }"
+                                                        action="{!chartFilterChanged}" reRender="chartsPanel, chartFilters" value="All Time" status="loading">
+                                        <apex:param name="chartFilter" value="AllTime" assignTo="{!chartFilter}" />
+                                    </apex:commandButton>
+                                </div>  
+                            </apex:form> 
+                        </div>
+                    </div>
+                    <apex:outputPanel id="chartsPanel" >
+                        <div class=" slds-grid  slds-p-left_small slds-p-right_small slds-p-bottom_small">
+                            <div class="slds-col slds-size_1-of-3 ">
+                                <div class="slds-card slds-m-right_x-small" style="background-color: white"> 
+                                    <div class="slds-align_absolute-center">
+                                        <p class="slds-text-heading_small slds-p-around_x-small">Badges</p>
+                                    </div>
+                                    <div class="slds-align_absolute-center slds-p-around_x-small">
+                                        <apex:chart height="300" width="350" data="{!performanceDataList}" resizable="true" legend="true" animate="true" >
+                                            <apex:legend position="bottom"/>
+                                            <apex:axis type="Numeric" position="left" fields="averageBadges" grid="true" />
+                                            <apex:axis type="Category" position="bottom" fields="statDate" />
+                                            <apex:lineSeries title="Team Average" axis="left" xField="statDate" yField="averageBadges" 
+                                                             markerType="circle" markerSize="4" markerFill="#FF0000" strokeColor="#FF0000" />
+                                        </apex:chart>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 ">
+                                <div class="slds-card slds-m-left_x-small slds-m-right_x-small" style="background-color: white"> 
+                                    <div class="slds-align_absolute-center">
+                                        <p class="slds-text-heading_small slds-p-around_x-small">Points</p>
+                                    </div>
+                                    <div class="slds-align_absolute-center slds-p-around_x-small">
+                                        <apex:chart height="300" width="350" data="{!performanceDataList}" resizable="true" legend="true" animate="true" >
+                                            <apex:legend position="bottom"/>
+                                            <apex:axis type="Numeric" position="left" fields="averagePoints" grid="true" />
+                                            <apex:axis type="Category" position="bottom" fields="statDate" />
+                                            <apex:lineSeries title="Team Average" axis="left" xField="statDate" yField="averagePoints" 
+                                                             markerType="circle" markerSize="4" markerFill="#FF0000" strokeColor="#FF0000"/>
+                                        </apex:chart>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 ">
+                                <div class="slds-card slds-m-left_x-small" style="background-color: white"> 
+                                    <div class="slds-align_absolute-center">
+                                        <p class="slds-text-heading_small slds-p-around_x-small">Trails Completed</p>
+                                    </div>
+                                    <div class="slds-align_absolute-center slds-p-around_x-small">
+                                        <apex:chart height="300" width="350" data="{!performanceDataList}" resizable="true" legend="true" animate="true">
+                                            <apex:legend position="bottom"/>
+                                            <apex:axis type="Numeric" position="left" fields="averageTrails" grid="true" />
+                                            <apex:axis type="Category" position="bottom" fields="statDate" />
+                                            <apex:lineSeries title="Team Average" axis="left" xField="statDate" yField="averageTrails" 
+                                                             markerType="circle" markerSize="4" markerFill="#FF0000" strokeColor="#FF0000"/>
+                                        </apex:chart>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </apex:outputPanel> 
+                    
+                </div>
+                
+                
+                <apex:outputPanel rendered="{!mostRecentBadgesList != null && mostRecentBadgesList.size > 0}">
+                    <div class="slds-card slds-m-around_small slds-p-around_small" style="background-color: white">
+                        <p class="slds-text-heading_medium">Newest Badges</p>
+                        <div class="slds-grid slds-wrap slds-align_absolute-center">
+                            <apex:repeat value="{!mostRecentBadgesList}" var="badge">
+                                <div class="slds-p-around_xx-small">
+                                    <a href="/trailheadtracker/trailheadtrackerbadges?viewBadge={!badge.Name}" target="_blank" style="text-decoration:none;"> 
+                                        <img src="{!badge.Icon_Url__c}" alt="{!badge.Title__c}" width="100" height="100"
+                                             title="{!badge.Title__c}" class="slds-p-around_x-small"  /> 
+                                    </a>
+                                </div>
+                            </apex:repeat>
+                        </div>
+                        <a class="slds-text-heading_small slds-align_absolute-center" href="/trailheadtracker/trailheadtrackerbadges" target="_blank"><u>View All</u></a>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!mostCommonBadgesList != null && mostCommonBadgesList.size > 0}">
+                    <div class="slds-card slds-m-around_small slds-p-around_small" style="background-color: white">
+                        <p class="slds-text-heading_medium ">Team's Strength Points</p>
+                        <div class="slds-grid slds-wrap slds-align_absolute-center">
+                            <apex:repeat value="{!mostCommonBadgesList}" var="badge">
+                                <div class="slds-p-around_xx-small">
+                                    <a href="/trailheadtracker/trailheadtrackerbadges?viewBadge={!badge.Name}" target="_blank" style="text-decoration:none;"> 
+                                        <img  src="{!badge.Icon_Url__c}" alt="{!badge.Title__c}" width="100" height="100"
+                                             title="{!badge.Title__c}" class="slds-p-around_x-small"  /> 
+                                    </a>
+                                </div>
+                            </apex:repeat>
+                        </div>
+                        <a class="slds-text-heading_small slds-align_absolute-center" href="/trailheadtracker/trailheadtrackerbadges" target="_blank"><u>View All</u></a>
+                    </div>
+                </apex:outputPanel>
+                
+            </div>
+            
+            
+            
+            <div class="footer">
+                <div class="slds-grid slds-wrap slds-border_top slds-p-around_small" >
+                    <div class="slds-col slds-size_4-of-12">
+                        <span style="float: left;">
+                            Need Help?&nbsp;<a href="mailTo:snandan@teksystems.com" target="_blank">Contact</a>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <span class="slds-align_absolute-center">
+                            Trailhead Tracker
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <span style="float: right;">
+                            Shashwat Nandan&nbsp;|&nbsp;TEKsystems
+                        </span>
+                    </div>
+                </div>
+                
+                
+            </div> 
+            
+        </div>
+        
+    </html>
+</apex:page>

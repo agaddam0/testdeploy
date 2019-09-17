@@ -1,0 +1,109 @@
+<apex:page controller="CSForce_SearchController" sidebar="false" >
+  
+  <style>
+  div[id*="topPB"] h2.mainTitle{
+    font-size: 20px !important;
+  }
+  
+  </style>
+  <apex:pageBlock title="Customer Stories" mode="edit" id="topPB">
+    <apex:outputLink value="{!listLink}" id="theLink">Click here to add customer story or go to list view.</apex:outputLink>
+  </apex:pageBlock>
+  <apex:form >
+    <apex:pageBlock title="Search" mode="edit">
+      <apex:pageBlockButtons >
+        <apex:commandButton action="{!doSearch}" value="Search"/>
+      </apex:pageBlockButtons>
+      <table>
+        <tr>
+          <td><apex:outputText value="Search Phrase"/></td>
+          <td><apex:inputText value="{!tSearch}" id="theTextInput"/></td>
+        </tr>
+        <tr>
+         <td><apex:outputText value="{!$ObjectType.CustomerStory__c.fields.Products__c.Label}"/></td>
+         <td>
+           <apex:selectList value="{!productSelected}" multiselect="false" size="1">
+             <apex:selectOptions value="{!productsSelect}"/>
+           </apex:selectList>
+          </td>
+         </tr>
+        <tr>
+         <td><apex:outputText value="{!$ObjectType.CustomerStory__c.fields.Win_Against__c.Label}"/></td>
+         <td>
+          <apex:selectList value="{!competitorSelected}" multiselect="false" size="1">
+           <apex:selectOptions value="{!competitorsSelect}"/>
+          </apex:selectList>
+          </td>
+         </tr>
+         <tr>
+           <td><apex:outputText value="{!$ObjectType.CustomerStory__c.fields.Story_Type__c.Label}"/></td>
+           <td><apex:selectList value="{!csSearch.Story_Type__c}" multiselect="false" size="1">
+           <apex:selectOptions value="{!storyType}"/>
+           </apex:selectList></td>
+         </tr>
+         <tr>
+           <td><apex:outputText value="{!$ObjectType.CustomerStory__c.fields.Sales_Reference__c.Label}"/></td>
+           <td><apex:selectList value="{!csSearch.Sales_Reference__c}" multiselect="false" size="1">
+           <apex:selectOptions value="{!salesPolicies}"/>
+           </apex:selectList>
+           </td>
+         </tr>
+         <tr>
+           <td><apex:outputText value="{!$ObjectType.CustomerStory__c.fields.sharingR__c.Label}"/></td>
+           <td><apex:selectList value="{!csSearch.Sharing_Restriction__c}" multiselect="false" size="1">
+           <apex:selectOptions value="{!sharingPolicies}"/>
+           </apex:selectList></td>
+         </tr>
+          <!-- <apex:inputField value="{!csSearch.Status__c}"/> 
+<apex:inputField value="{!csSearch.Sharing_Restriction__c}"/>-->
+      </table>
+      </apex:pageBlock>
+     </apex:form>
+
+    <apex:pageBlock title="Results" mode="edit">
+    	<apex:pageBlockTable value="{!csHelperList}" var="csh" id="theRepeat">
+        
+         <apex:column ><apex:facet name="header">{!$ObjectType.CustomerStory__c.fields.Name.Label}</apex:facet><div id="{!csh.title}"></div><apex:outputLink value="{!csh.link}" id="theLink">{!csh.title}</apex:outputLink></apex:column>
+         <apex:column ><apex:facet name="header">{!$ObjectType.CustomerStory__c.fields.Products__c.Label}</apex:facet>{!csh.products}</apex:column>
+         <apex:column ><apex:facet name="header">{!$ObjectType.CustomerStory__c.fields.Win_Against__c.Label}</apex:facet>{!csh.winAgainst}</apex:column>
+         <apex:column ><apex:facet name="header">{!$ObjectType.CustomerStory__c.fields.Story_Type__c.Label}</apex:facet>{!csh.storyType}</apex:column>
+         <apex:column ><apex:facet name="header">{!$ObjectType.CustomerStory__c.fields.Synopsis__c.Label}</apex:facet>{!csh.synopsis}</apex:column>
+         <apex:column ><apex:facet name="header">{!$ObjectType.CustomerStory__c.fields.Sales_Reference__c.Label}</apex:facet><div id="{!csh.salesRef}"></div><apex:image id="salesRef" value="{!csh.salesRef}"/></apex:column>
+         <apex:column ><apex:facet name="header">{!$ObjectType.CustomerStory__c.fields.sharingR__c.Label}</apex:facet><div id="{!csh.sharingRes}"></div><apex:image id="sharingRes" value="{!csh.sharingRes}"/></apex:column>
+            
+       </apex:pageBlockTable>
+    
+    </apex:pageBlock>
+    
+    <!--
+  <apex:pageBlock title="Results" mode="edit">
+
+    <table class="myTable" id="resultsTable">
+     <thead>
+       <tr>
+         <th>{!$ObjectType.CustomerStory__c.fields.Name.Label}</th>
+         <th>{!$ObjectType.CustomerStory__c.fields.Products__c.Label}</th>
+         <th>{!$ObjectType.CustomerStory__c.fields.Win_Against__c.Label}</th>
+         <th>{!$ObjectType.CustomerStory__c.fields.Story_Type__c.Label}</th>
+         <th>{!$ObjectType.CustomerStory__c.fields.Synopsis__c.Label}</th>
+         <th>{!$ObjectType.CustomerStory__c.fields.Sales_Reference__c.Label}</th>
+         <th>{!$ObjectType.CustomerStory__c.fields.sharingR__c.Label}</th>
+       </tr>
+     </thead>
+     <tbody>
+      <apex:repeat value="{!csHelperList}" var="csh" id="theRepeat">
+        <tr>
+          <td><div id="{!csh.title}"></div><apex:outputLink value="{!csh.link}" id="theLink">{!csh.title}</apex:outputLink></td>  
+          <td>{!csh.products}</td>
+          <td>{!csh.winAgainst}</td>
+          <td>{!csh.storyType}</td>
+          <td>{!csh.synopsis}</td>
+          <td><div id="{!csh.salesRef}"></div><apex:image id="salesRef" value="{!csh.salesRef}"/></td>
+          <td><div id="{!csh.sharingRes}"></div><apex:image id="sharingRes" value="{!csh.sharingRes}"/></td>
+        </tr>
+      </apex:repeat>
+     </tbody> 
+    </table>
+  </apex:pageBlock>
+-->
+</apex:page>

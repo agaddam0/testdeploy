@@ -1,0 +1,102 @@
+<aura:component controller="TC_DevopsQuestionController">
+    <aura:attribute name="autoValue" type="String" />
+    <aura:attribute name="title" type="String"/>
+    <aura:attribute name="nextQuestion" type="Object" />
+    <aura:attribute name="nextAnswer" type="List"/>
+    <aura:attribute name="radioValue" type="String" default=""/>
+    <aura:attribute name="submitQuestion" type="Boolean" default="false"/>
+    <aura:attribute name="activeText" type="Boolean" default="false"/>
+    <aura:attribute name="multiSelectText" type="Boolean" default="false"/>
+    <aura:attribute name="pickListText" type="Boolean" default="false"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+    <aura:attribute name="isDisabled" type="boolean"  default="true"/>
+    <aura:attribute name="showFeedBack" type="boolean"  default="false"/>
+    <aura:attribute name="showQuestion" type="boolean"  default="false"/>
+    <aura:attribute name="Footer" type="boolean"  default="false"/>
+    <aura:attribute name="inputValue" type="String"/>
+    <aura:attribute name="multiValue" type="List"/>
+    <aura:attribute name="surveyId" type="String"/>
+    <aura:attribute name="maturityLevel" type="String"/>  
+    <aura:attribute name="countQuestion" type="Integer" Default = "1"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    
+    <lightning:card class="auto" title=" ">       
+        <aura:if isTrue="{!v.showQuestion}">
+            <div class="slds-text-heading_medium">
+                <ui:outputText aura:id="question" class="Textsize" value="{!v.nextQuestion}" />
+                <ui:outputText aura:id="autonumber"  class="slds-hidden" value="{!v.autoValue}"/><br/>
+                 
+                <aura:if isTrue="{!v.activeText}">
+                    <lightning:input aura:id="input"  value="{!v.inputValue}" onchange="{!c.validation}"/>  
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.pickListText}">
+                            <lightning:radioGroup name="radioGroupRequired"
+                                                  aura:id="radio"
+                                                  class="Textsize"
+                                                  options="{! v.nextAnswer }"
+                                                  value="{! v.radioValue }"
+                                                  type="radio"                               
+                                                  onchange="{!c.validation}"
+                                                  />
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!v.multiSelectText}">
+                                    <lightning:checkboxGroup name="Answers"                                     
+                                                             aura:id="multiSelect"
+                                                             class="Textsize"
+                                                             sourceLabel="Available" 
+                                                             selectedLabel="Selected" 
+                                                             options="{!v.nextAnswer}"
+                                                             value="{!v.multiValue}"
+                                                             onchange="{!c.validation}"/>
+                                    
+                                    
+                                </aura:if>
+                            </aura:set>
+                        </aura:if></aura:set>
+                </aura:if>
+                
+            </div>
+        </aura:if>
+        
+        <div>
+            <aura:if isTrue="{!v.showFeedBack}">
+                <div class="Messagebox">
+                    <p class="feedback1">Thank you for completing this Self-Assessment.</p><br/>
+                    
+                    <p class="feedback">Based on your responses you stand at Maturity level : {!v.maturityLevel}</p><br/>
+                    
+                    
+                    <p class="feedback3">You will receive an email with a more detailed matrix report of where you are on the maturity ladder in relationship to the five vectors that will move you up the ladder.</p><br/>
+                    <p class="feedback2">To schedule a conversation at Dreamforce about these results, send an email to <a>chavens@teksystems.com</a></p>
+                </div>
+            </aura:if>
+            
+        </div>
+        <aura:if isTrue="{!v.Footer}">
+            <footer class="slds-modal__footer">
+                <div class="slds-grid slds-gutters">
+                <div class="slds-col questionNumber">
+               <ui:outputText aura:id="number123"  value="{!v.autoValue}"/><br/>
+              <!--  Question : <ui:outputText aura:id="countNumber"  value= "{!v.countQuestion}"/><br/>-->
+              
+                    </div>
+                 <div class="slds-col ">
+                <aura:if isTrue="{!v.submitQuestion}">
+                    <lightning:button label="Submit" variant="Neutral" onclick="{!c.closeFeedback}"/>
+                    <aura:set attribute="else">
+                        
+                        <lightning:button label="Next" variant="Neutral" onclick="{!c.nextQuestion}">
+                            <aura:set attribute="disabled" value="{!v.isDisabled}"/>
+                        </lightning:button>
+                        
+                    </aura:set>                      
+                </aura:if>
+                    </div>
+                </div>
+            </footer>
+        </aura:if>
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner alternativeText="Loading" size="medium" />
+        </aura:if>
+    </lightning:card>        
+</aura:component>

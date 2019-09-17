@@ -1,0 +1,34 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes" controller="TC_Devopsimages">
+    <aura:attribute name="carouselDataList" type="List"/>
+    <aura:attribute name="error" type="String" default=""/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:if isTrue="{!empty(v.error)}">
+        <aura:if isTrue="{!!empty(v.carouselDataList)}">
+         
+            <lightning:carousel  class="Imageclass" disableAutoRefresh="false" disableAutoScroll="false" scrollDuration='7'>
+                <aura:iteration items="{!v.carouselDataList}" var="carouselData" >
+                  
+                    <div class="slds-col slds-size_7-of-7 sample">
+                       <lightning:carouselImage
+                        src = "{!carouselData.src}"
+                         class="Imageclass12"
+                        header = "{!carouselData.header}"
+                        description = "{!carouselData.description}"
+                        alternativeText = "{!carouselData.alternativeText}"
+                        href = "{!carouselData.href}">
+                    </lightning:carouselImage>
+                          </div>
+                      
+                </aura:iteration>
+            </lightning:carousel>
+            
+        </aura:if>
+        <aura:set attribute="else">
+            <div align="center" class="errorClass">
+                {!v.error}
+            </div>    
+        </aura:set>    
+    </aura:if>
+</aura:component>

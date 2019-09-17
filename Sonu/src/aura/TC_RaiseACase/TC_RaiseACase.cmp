@@ -1,0 +1,20 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+	<aura:attribute name="flag" type="Boolean" default="false" />
+    <aura:attribute name="accountName" type="string"/>
+    <lightning:layout>
+        <lightning:layoutItem size="4" padding="around-small">
+    <lightning:card title="" >
+        <center>   <lightning:button label="Raise a Case/Query?"  title="Query" onclick="{!c.handleQueries}"/></center><br/>
+        
+        <p class="slds-p-horizontal_small">
+			 <aura:if isTrue="{!v.flag}">
+        <c:TC_CreateRecord header="Submit Case/Query" objectName="Case" fields="Status,Type,Origin,Priority,Subject,Description" />  
+    </aura:if>
+        </p>
+    </lightning:card>
+            </lightning:layoutItem>
+    </lightning:layout>
+
+    	
+   
+</aura:component>

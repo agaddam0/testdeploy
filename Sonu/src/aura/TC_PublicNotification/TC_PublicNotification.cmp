@@ -1,0 +1,27 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes" controller="TC_PublicNotificationCtlr">
+    <aura:attribute name="carouselDataList" type="List"/>
+    <aura:attribute name="error" type="String" default=""/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:if isTrue="{!empty(v.error)}">
+        <aura:if isTrue="{!!empty(v.carouselDataList)}">
+            <lightning:carousel disableAutoRefresh="false" disableAutoScroll="false">
+                <aura:iteration items="{!v.carouselDataList}" var="carouselData">
+                    <lightning:carouselImage
+                        src = "{!carouselData.src}"
+                        header = "{!carouselData.header}"
+                        description = "{!carouselData.description}"
+                        alternativeText = "{!carouselData.alternativeText}"
+                        href = "{!carouselData.href}">
+                    </lightning:carouselImage>
+                </aura:iteration>
+            </lightning:carousel>
+        </aura:if>
+        <aura:set attribute="else">
+            <div align="center" class="errorClass">
+                {!v.error}
+            </div>    
+        </aura:set>    
+    </aura:if>
+</aura:component>

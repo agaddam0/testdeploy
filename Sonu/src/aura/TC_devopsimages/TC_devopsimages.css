@@ -1,0 +1,13 @@
+.THIS.errorClass{
+    color: rgb(194, 57, 52);
+}
+
+.THIS .slds-carousel__panel-action {
+     border-width: 1.2px;
+    border-color: #bbb;  
+}
+
+.THIS .slds-hyphenate
+{
+    color:blue;
+}

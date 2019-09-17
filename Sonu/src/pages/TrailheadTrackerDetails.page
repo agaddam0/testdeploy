@@ -1,0 +1,420 @@
+<apex:page sidebar="false" showHeader="false" title="Trailhead Tracker Details" cache="true"
+           standardStylesheets="true" controller="TrailheadTrackerDetailsController">
+    
+    <style>
+        .slds-scope [hidden], .slds-scope template {
+        display: block;
+        }
+        .content {
+        min-height: calc(100vh - 70px);
+        }
+        .footer {
+        height: 40px;
+        }
+        
+        
+        
+    </style>
+    
+    <script>
+    function liveClicked()
+    {
+        liveButtonClicked();
+    }
+    function triggerSearch()
+    {
+        var searchInput = (document.getElementById("searchInput")).value;
+        callSearchMethod(searchInput);
+    }
+    </script>
+    
+    
+    
+    <apex:slds />
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        
+        <apex:form >
+            <apex:actionFunction name="liveButtonClicked" action="{!reRunBatch}" status="loading"/>
+            <apex:actionFunction name="callSearchMethod" action="{!performSearch}" rerender="teamBadgesCard" status="loading">     
+                <apex:param id="searchInput" name="searchInput" value="" />
+            </apex:actionFunction>
+        </apex:form>
+        
+        <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <div role="status" class="slds-spinner slds-spinner_large slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-s"></div>
+                </div>
+            </apex:facet>
+        </apex:actionStatus>
+        
+        <div class="slds-scope">
+            <div class="content">
+                
+                
+                
+                <article class="slds-border_bottom">
+                    <div class="slds-card__header slds-grid">
+                        <div class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__figure">
+                                <span class="slds-avatar slds-avatar_large">
+                                    <apex:outputPanel rendered="{! trailheadDisplayPic != '/assets/astro-vatar-aea32d8b76aaf20630d792922308031ac971cb5597042217981872707d435280.svg'}">
+                                        <img src="{!trailheadDisplayPic}" alt="{!trailheadUser.Name}"  />
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{! trailheadDisplayPic == '/assets/astro-vatar-aea32d8b76aaf20630d792922308031ac971cb5597042217981872707d435280.svg'}">
+                                        <abbr class="slds-avatar__initials slds-icon-standard-user" >{!initials}</abbr>
+                                    </apex:outputPanel>                              
+                                </span>
+                            </div>
+                            
+                            <div class="slds-media__body">
+                                
+                                <span class="slds-text-heading_medium">{!trailheadUser.Name}</span>
+                                <br/>{!totalBadges} badges, {!totalPoints} points, {!totalTrailsCompleted} trails, {!totalSuperbadges} superbadges
+                                <br/>{!rank}
+                                
+                            </div>
+                        </div>
+                        <div class="slds-no-flex">
+                            <apex:outputText rendered="{! !batchesProcessing}">
+                                <button class="slds-button slds-button_success" style="color: white" onclick="liveClicked();" id="liveButton" >LIVE</button>
+                            </apex:outputText>
+                            <a class="slds-button slds-button_brand" href="{!'https://trailhead.salesforce.com/en/me/' + trailheadUser.Trailhead_Id__c}" target="_blank">View Trailhead Profile</a>
+                            <a class="slds-button slds-button_neutral" href="/trailheadtracker/trailheadtrackerhome">Back to Home</a>
+                            
+                        </div>
+                    </div>
+                </article>
+                
+                <apex:outputPanel rendered="{! batchesProcessing}" 
+                                  styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-box slds-align_absolute-center slds-m-around_small slds-m-around_small slds-text-heading_small" style="color: white">
+                    The stats are currently getting&nbsp;<a href="/trailheadtracker/trailheadtrackersystemstatus" style="color: white" target="_blank">updated</a>. Kindly refresh (maybe more than one time) the page to see the latest data.
+                </apex:outputPanel>
+                
+                <div class="slds-card slds-p-around_small slds-m-around_small" >
+                    <div class="slds-card__header  slds-clearfix">
+                        <div class="slds-text-heading_medium slds-float_left">Performance</div>
+                        <div class="slds-float_right">
+                            <apex:form id="chartFilters">
+                                
+                                <div class="slds-button-group" role="group">
+                                    <apex:commandButton styleClass="{!IF(toggleAverage == false, 'slds-button slds-button_destructive slds-button_small', 'slds-button slds-button_brand slds-button_small') }"
+                                                        reRender="chartsPanel, chartFilters"
+                                                        value="{!IF(toggleAverage == false, 'Compare with Team Average', 'Hide Team Average') }" status="loading">
+                                        <apex:param name="toggleAverage" value="{! !toggleAverage}" assignTo="{!toggleAverage}" />
+                                    </apex:commandButton>
+                                    <apex:commandButton styleClass="{!IF(chartFilter == 'Last5Days', 'slds-button slds-button_brand', 'slds-button slds-button_neutral') }"
+                                                        action="{!chartFilterChanged}" reRender="chartsPanel, chartFilters" value="Last 5 Days" status="loading">
+                                        <apex:param name="chartFilter" value="Last5Days" assignTo="{!chartFilter}" />
+                                    </apex:commandButton>
+                                    <apex:commandButton styleClass="{!IF(chartFilter == 'Last30Days', 'slds-button slds-button_brand', 'slds-button slds-button_neutral') }"
+                                                        action="{!chartFilterChanged}" reRender="chartsPanel, chartFilters" value="Last 30 Days" status="loading">
+                                        <apex:param name="chartFilter" value="Last30Days" assignTo="{!chartFilter}" />
+                                    </apex:commandButton>
+                                    <apex:commandButton styleClass="{!IF(chartFilter == 'AllTime', 'slds-button slds-button_brand', 'slds-button slds-button_neutral') }"
+                                                        action="{!chartFilterChanged}" reRender="chartsPanel, chartFilters" value="All Time" status="loading">
+                                        <apex:param name="chartFilter" value="AllTime" assignTo="{!chartFilter}" />
+                                    </apex:commandButton> 
+                                </div>  
+                            </apex:form> 
+                        </div>
+                    </div>
+                    <apex:outputPanel id="chartsPanel" >
+                        <div class=" slds-grid">
+                            <div class="slds-col slds-size_1-of-3 ">
+                                <div class="slds-card slds-m-right_x-small" style="background-color: white"> 
+                                    <div class="slds-align_absolute-center">
+                                        <p class="slds-text-heading_small slds-p-around_x-small">Badges</p>
+                                    </div>
+                                    <div class="slds-align_absolute-center slds-p-around_x-small">
+                                        <apex:chart height="300" width="350" data="{!performanceDataList}" resizable="true" legend="true" animate="true" >
+                                            <apex:legend position="bottom"/>
+                                            <apex:axis type="Numeric" position="left" fields="badges,averageBadges" grid="true" />
+                                            <apex:axis type="Category" position="bottom" fields="statDate" />
+                                            <apex:lineSeries title="{!trailheadUser.Name}'s Badges" axis="left"  xField="statDate" yField="badges"
+                                                             markerType="circle" markerSize="4" markerFill="#a1f2b3"/>
+                                            <apex:lineSeries title="Team Average" axis="left" xField="statDate" yField="averageBadges" 
+                                                             markerType="circle" markerSize="4" markerFill="#FF0000" strokeColor="#FF0000" rendered="{!toggleAverage}" />
+                                        </apex:chart>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 ">
+                                <div class="slds-card slds-m-left_x-small slds-m-right_x-small" style="background-color: white"> 
+                                    <div class="slds-align_absolute-center">
+                                        <p class="slds-text-heading_small slds-p-around_x-small">Points</p>
+                                    </div>
+                                    <div class="slds-align_absolute-center slds-p-around_x-small">
+                                        <apex:chart height="300" width="350" data="{!performanceDataList}" resizable="true" legend="true" animate="true" >
+                                            <apex:legend position="bottom"/>
+                                            <apex:axis type="Numeric" position="left" fields="points,averagePoints" grid="true" />
+                                            <apex:axis type="Category" position="bottom" fields="statDate" />
+                                            <apex:lineSeries title="{!trailheadUser.Name}'s Points" axis="left"  xField="statDate" yField="points"
+                                                             markerType="circle" markerSize="4" markerFill="#a1f2b3" />
+                                            <apex:lineSeries title="Team Average" axis="left" xField="statDate" yField="averagePoints" 
+                                                             markerType="circle" markerSize="4" markerFill="#FF0000" strokeColor="#FF0000" rendered="{!toggleAverage}"/>
+                                        </apex:chart>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 ">
+                                <div class="slds-card slds-m-left_x-small" style="background-color: white"> 
+                                    <div class="slds-align_absolute-center">
+                                        <p class="slds-text-heading_small slds-p-around_x-small">Trails Completed</p>
+                                    </div>
+                                    <div class="slds-align_absolute-center slds-p-around_x-small">
+                                        <apex:chart height="300" width="350" data="{!performanceDataList}" resizable="true" legend="true" animate="true">
+                                            <apex:legend position="bottom"/>
+                                            <apex:axis type="Numeric" position="left" fields="trails,averageTrails" grid="true" />
+                                            <apex:axis type="Category" position="bottom" fields="statDate" />
+                                            <apex:lineSeries title="{!trailheadUser.Name}'s Trails" axis="left"  xField="statDate" yField="trails"
+                                                             markerType="circle" markerSize="4" markerFill="#a1f2b3"/>
+                                            <apex:lineSeries title="Team Average" axis="left" xField="statDate" yField="averageTrails" 
+                                                             markerType="circle" markerSize="4" markerFill="#FF0000" strokeColor="#FF0000" rendered="{!toggleAverage}"/>
+                                        </apex:chart>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </apex:outputPanel>
+                    
+                </div>
+                
+                <div class="slds-card slds-m-around_small" >
+                    
+                    
+                    <div class="slds-grid slds-p-top_small slds-p-left_small slds-p-right_small">
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="slds-card slds-m-right_x-small" style="background-color: white"> 
+                                <div class="slds-align_absolute-center">
+                                    <p class="slds-text-heading_small slds-p-around_x-small">Modules</p>
+                                </div>
+                                <div class="slds-align_absolute-center slds-p-around_x-small">
+                                    <apex:chart data="{!pendingModulesCountList}" height="300" width="350" animate="true">
+                                        <apex:legend position="bottom" padding="10"/>
+                                        <apex:pieSeries labelField="label" dataField="count" donut="40" colorSet="#51CC57, #fc4646">
+                                            <apex:chartLabel display="none" orientation="vertical" 
+                                                             font="bold 18px Helvetica"/>
+                                        </apex:pieSeries>
+                                    </apex:chart>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="slds-card slds-m-left_x-small slds-m-right_x-small" style="background-color: white"> 
+                                <div class="slds-align_absolute-center">
+                                    <p class="slds-text-heading_small slds-p-around_x-small">Projects</p>
+                                </div>
+                                <div class="slds-align_absolute-center slds-p-around_x-small">
+                                    <apex:chart data="{!pendingProjectsCountList}" height="300" width="350" animate="true">
+                                        <apex:legend position="bottom" padding="10" />
+                                        <apex:pieSeries labelField="label" dataField="count"  donut="40" colorSet="#51CC57, #fc4646">
+                                            <apex:chartLabel display="none" orientation="vertical" 
+                                                             font="bold 18px Helvetica"/>
+                                        </apex:pieSeries>
+                                    </apex:chart>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="slds-card slds-m-left_x-small " style="background-color: white"> 
+                                <div class="slds-align_absolute-center">
+                                    <p class="slds-text-heading_small slds-p-around_x-small">Superbadges</p>
+                                </div>
+                                <div class="slds-align_absolute-center slds-p-around_x-small">
+                                    <apex:chart data="{!pendingSuperbadgesCountList}" height="300" width="350" animate="true" >
+                                        <apex:legend position="bottom" padding="10"/>
+                                        <apex:pieSeries labelField="label" dataField="count"  donut="40" colorSet="#51CC57, #fc4646">
+                                            <apex:chartLabel display="none" orientation="vertical" 
+                                                             font="bold 18px Helvetica"/>
+                                        </apex:pieSeries>
+                                    </apex:chart>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <apex:outputPanel id="teamPendingBadgesCard" >
+                        <apex:outputPanel rendered="{! !showPendingBadges}">
+                            <apex:form >
+                                <div class="slds-align_absolute-center slds-p-around_small slds-text-heading_medium ">
+                                    
+                                    <apex:commandLink reRender="teamPendingBadgesCard" title="Click here to view them"
+                                                      value="{! trailheadUser.Name + ' has ' + TEXT(pendingModuleBadgesListRaw.size) + ' Modules, ' + TEXT(pendingProjectBadgesListRaw.size) + ' Projects, ' + TEXT(pendingSuperbadgeBadgesListRaw.size) + ' Superbadges, yet to complete' }" status="loading">
+                                        <apex:param name="showPendingBadges" value="{! !showPendingBadges}" assignTo="{!showPendingBadges}" />
+                                    </apex:commandLink>
+                                    
+                                </div>
+                            </apex:form>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{! showPendingBadges}">
+                            <apex:form >
+                                <div class="slds-align_absolute-center slds-p-around_small slds-text-heading_medium ">
+                                    
+                                    <apex:commandLink reRender="teamPendingBadgesCard" title="Click here to hide them"
+                                                      value="{! trailheadUser.Name + ' has ' + TEXT(pendingModuleBadgesListRaw.size) + ' Modules, ' + TEXT(pendingProjectBadgesListRaw.size) + ' Projects, ' + TEXT(pendingSuperbadgeBadgesListRaw.size) + ' Superbadges, yet to complete' }" status="loading">
+                                        <apex:param name="showPendingBadges" value="{! !showPendingBadges}" assignTo="{!showPendingBadges}" />
+                                    </apex:commandLink>
+                                    
+                                </div>
+                            </apex:form>
+                            <div class="slds-grid " >
+                                <div class="slds-col slds-size_2-of-3"> 
+                                    <div class=" slds-box slds-box_xx-small" style="background-color: white"> 
+                                        <p class="slds-text-heading_small slds-p-around_x-small slds-align_absolute-center">Modules Yet to Complete</p>
+                                        <div class="slds-align_absolute-center">
+                                            <div class="slds-p-around_x-small">
+                                                <apex:outputText rendered="{!pendingModuleBadgesListRaw == null}">Unable to fetch data from Trailhead. Make sure that profile is 'Public'</apex:outputText>
+                                                <apex:outputText rendered="{!pendingModuleBadgesListRaw != null && pendingModuleBadgesListRaw.size == 0}">All caught up!</apex:outputText>
+                                                <apex:repeat value="{!pendingModuleBadgesListRaw}" var="badgeData" rendered="{!pendingModuleBadgesListRaw != null && pendingModuleBadgesListRaw.size >= 0}">
+                                                    <a href="/trailheadtracker/trailheadtrackerbadges?viewBadge={!badgeData.apiName}" target="_blank" style="text-decoration:none;"> 
+                                                        <img  src="{!badgeData.imageSRC}" alt="{!badgeData.name}" width="75" height="75"
+                                                             title="{!badgeData.name}" class="slds-p-around_x-small"  /> 
+                                                    </a>
+                                                </apex:repeat> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-3 "> 
+                                    <div class="slds-box slds-box_xx-small" style="background-color: white">
+                                        <p class="slds-text-heading_small slds-p-around_x-small slds-align_absolute-center">Superbadges Yet to Complete</p>
+                                        <div class="slds-align_absolute-center">
+                                            <div class="slds-p-around_x-small">
+                                                <apex:outputText rendered="{!pendingsuperbadgeBadgesListRaw == null}">Unable to fetch data from Trailhead. Make sure that profile is 'Public'</apex:outputText>
+                                                <apex:outputText rendered="{!pendingsuperbadgeBadgesListRaw != null && pendingsuperbadgeBadgesListRaw.size == 0}">All caught up!</apex:outputText>
+                                                <apex:repeat value="{!pendingsuperbadgeBadgesListRaw}" var="badgeData" rendered="{!pendingsuperbadgeBadgesListRaw != null && pendingsuperbadgeBadgesListRaw.size > 0}">
+                                                    <a href="/trailheadtracker/trailheadtrackerbadges?viewBadge={!badgeData.apiName}" target="_blank"  style="text-decoration:none;"> 
+                                                        <img  src="{!badgeData.imageSRC}" alt="{!badgeData.name}" width="100" height="100" 
+                                                             title="{!badgeData.name}" class="slds-p-around_x-small"  /> 
+                                                    </a>
+                                                </apex:repeat> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="slds-box slds-box_xx-small" style="background-color: white;">
+                                        <p class="slds-text-heading_small slds-p-around_x-small slds-align_absolute-center">Projects Yet to Complete</p>
+                                        <div class="slds-align_absolute-center">
+                                            <div class="slds-p-around_x-small">
+                                                <apex:outputText rendered="{!pendingProjectBadgesListRaw == null}">Unable to fetch data from Trailhead. Make sure that profile is 'Public'</apex:outputText>
+                                                <apex:outputText rendered="{!pendingProjectBadgesListRaw != null && pendingProjectBadgesListRaw.size == 0}">All caught up!</apex:outputText>
+                                                <apex:repeat value="{!pendingProjectBadgesListRaw}" var="badgeData" rendered="{!pendingProjectBadgesListRaw != null && pendingProjectBadgesListRaw.size > 0}">
+                                                    <a href="/trailheadtracker/trailheadtrackerbadges?viewBadge={!badgeData.apiName}" target="_blank" style="text-decoration:none;"> 
+                                                        <img  src="{!badgeData.imageSRC}" alt="{!badgeData.name}" width="75" height="75"
+                                                             title="{!badgeData.name}" class="slds-p-around_x-small" /> 
+                                                    </a>
+                                                </apex:repeat> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </div>
+                
+                <div class="slds-card slds-m-around_small" >
+                    <div class="slds-card__header  slds-clearfix">
+                        <div class="slds-text-heading_medium slds-float_left">{!trailheadUser.Name}'s Badges </div>
+                        <div class="slds-float_right">
+                            <input type="text" id="searchInput" class="slds-input" placeholder="Search Badges by Name" onkeyup="triggerSearch()" />
+                        </div>
+                        
+                    </div>
+                    
+                    <apex:outputPanel id="teamBadgesCard" >
+                        <div class="slds-grid " >
+                            <div class="slds-col slds-size_2-of-3"> 
+                                <div class=" slds-box slds-box_xx-small" style="background-color: white"> 
+                                    <p class="slds-text-heading_small slds-p-around_x-small slds-align_absolute-center">Modules</p>
+                                    <div class="slds-align_absolute-center">
+                                        <div class="slds-p-around_x-small">
+                                            <apex:outputText rendered="{!moduleBadgesList == null}">Unable to fetch data from Trailhead. Make sure that profile is 'Public'</apex:outputText>
+                                            <apex:outputText rendered="{!moduleBadgesList != null && moduleBadgesList.size == 0}">No modules found</apex:outputText>
+                                            <apex:repeat value="{!moduleBadgesList}" var="badgeData" rendered="{!moduleBadgesList != null && moduleBadgesList.size >= 0}">
+                                                <a href="/trailheadtracker/trailheadtrackerbadges?viewBadge={!badgeData.apiName}" target="_blank" style="text-decoration:none;"> 
+                                                    <img  src="{!badgeData.imageSRC}" alt="{!badgeData.name}" width="75" height="75"
+                                                         title="{!badgeData.name}" class="slds-p-around_x-small"  /> 
+                                                </a>
+                                            </apex:repeat> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 "> 
+                                <div class="slds-box slds-box_xx-small" style="background-color: white">
+                                    <p class="slds-text-heading_small slds-p-around_x-small slds-align_absolute-center">Superbadges</p>
+                                    <div class="slds-align_absolute-center">
+                                        <div class="slds-p-around_x-small">
+                                            <apex:outputText rendered="{!superbadgeBadgesList == null}">Unable to fetch data from Trailhead. Make sure that profile is 'Public'</apex:outputText>
+                                            <apex:outputText rendered="{!superbadgeBadgesList != null && superbadgeBadgesList.size == 0}">No superbadges found</apex:outputText>
+                                            <apex:repeat value="{!superbadgeBadgesList}" var="badgeData" rendered="{!superbadgeBadgesList != null && superbadgeBadgesList.size > 0}">
+                                                <a href="/trailheadtracker/trailheadtrackerbadges?viewBadge={!badgeData.apiName}" target="_blank"  style="text-decoration:none;"> 
+                                                    <img  src="{!badgeData.imageSRC}" alt="{!badgeData.name}" width="100" height="100" 
+                                                         title="{!badgeData.name}" class="slds-p-around_x-small"  /> 
+                                                </a>
+                                            </apex:repeat> 
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="slds-box slds-box_xx-small" style="background-color: white;">
+                                    <p class="slds-text-heading_small slds-p-around_x-small slds-align_absolute-center">Projects</p>
+                                    <div class="slds-align_absolute-center">
+                                        <div class="slds-p-around_x-small">
+                                            <apex:outputText rendered="{!projectBadgesList == null}">Unable to fetch data from Trailhead. Make sure that profile is 'Public'</apex:outputText>
+                                            <apex:outputText rendered="{!projectBadgesList != null && projectBadgesList.size == 0}">No projects found</apex:outputText>
+                                            <apex:repeat value="{!projectBadgesList}" var="badgeData" rendered="{!projectBadgesList != null && projectBadgesList.size > 0}">
+                                                <a href="/trailheadtracker/trailheadtrackerbadges?viewBadge={!badgeData.apiName}" target="_blank" style="text-decoration:none;"> 
+                                                    <img  src="{!badgeData.imageSRC}" alt="{!badgeData.name}" width="75" height="75"
+                                                         title="{!badgeData.name}" class="slds-p-around_x-small" /> 
+                                                </a>
+                                            </apex:repeat> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </apex:outputPanel>
+                </div>
+                
+            </div>
+            <div class="footer">
+                <div class="slds-grid slds-wrap slds-border_top slds-p-around_small" >
+                    <div class="slds-col slds-size_4-of-12">
+                        <span style="float: left;">
+                            Need Help?&nbsp;<a href="mailTo:snandan@teksystems.com" target="_blank">Contact</a>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <span class="slds-align_absolute-center">
+                            Trailhead Tracker            
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <span style="float: right;">
+                            Shashwat Nandan&nbsp;|&nbsp;TEKsystems
+                        </span>
+                    </div>
+                </div>
+                
+                
+            </div> 
+            
+            
+        </div>
+        
+    </html>
+</apex:page>

@@ -1,0 +1,10 @@
+<aura:component controller="TC_GraphController" implements="flexipage:availableForAllPageTypes,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global">
+	
+    <ltng:require scripts="{!$Resource.Chart}" afterScriptsLoaded="{!c.ctr}"/>
+     <lightning:card variant="base" title="Financial Data">
+    <div style="background-color:white;" class="slds-col slds-size--1-of-1 slds-small-size--1-of-2 slds-medium-size--3-of-4">
+        <canvas aura:id="barChart" id="barChart" />
+    </div>
+    </lightning:card>
+     
+</aura:component>

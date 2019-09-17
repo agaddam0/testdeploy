@@ -1,0 +1,18 @@
+<aura:component controller="TC_DevopsQuestionController" >
+    <aura:attribute name="Enabled" type="boolean" default="false"/>
+      <aura:attribute name="output" type="Object" />
+        <aura:attribute name="nextQuestion2" type="Object" />
+    
+    <aura:attribute name="nextAnswer2" type="List"/>
+     <aura:handler event="c:TC_DevopsQuestionEvent" action="{!c.handleApplicationEvent}"/>
+    <aura:if isTrue="{!v.Enabled}">
+	<ui:outputText aura:id="question1" value="{!v.nextQuestion2}"/>
+      <ui:outputText aura:id="autonumber1" class="slds-hidden" value="{!v.output.Name}"/>
+    <lightning:select aura:id="answer1" name="select" label="Answers" >
+        <option value="">-- None --</option>
+        <aura:iteration items="{!v.nextAnswer2}" var="cr">
+            <option value="{!cr}">{!cr}</option>
+        </aura:iteration>
+    </lightning:select>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,11 @@
+<aura:component>
+    <aura:attribute name="field" type="String"/>
+    <aura:attribute name="required" type="Boolean" default=""/>
+    <aura:attribute name="requiredMessage" type="String" default=""/>
+    <aura:attribute name="showRequiredMessage" type="Boolean" default="false"/>
+    
+    <lightning:inputField aura:id="inputfield" fieldName="{!v.field}" class="customRequired"  onchange="{!c.valueChanged}"/>
+    <aura:if isTrue="{!v.showRequiredMessage}">
+       <div class="slds-form-element__help slds-required inputVal">{!v.requiredMessage}</div> 
+    </aura:if>
+</aura:component>

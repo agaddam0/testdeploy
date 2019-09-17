@@ -1,0 +1,116 @@
+<aura:component controller="accountcontroller">
+       <aura:attribute name="title" type="String" default="   Services(2)"/>
+       <aura:attribute name="sortedBy" type="String" default="Name"/>
+    <aura:attribute name="sortedDirection" type="String" default="asc"/>
+    <aura:attribute name="myBool" type="Boolean" default="true"/>
+    <aura:attribute name="Acc" type="Account[]" />
+      <aura:attribute name="div" type="Object[]" default="[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:card>
+        <aura:set attribute="actions">
+         
+	
+	<ui:inputCheckbox aura:id="checkbox" label="Show Inactive?" change="{!c.onCheck}"/>
+
+
+
+        </aura:set>
+        <aura:set attribute="title">
+            <lightning:icon iconName="action:approval" size="small"/>
+            {! v.title }
+        </aura:set>
+ <table aria-multiselectable="true" class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" role="grid">
+<thead>
+<tr class="slds-line-height_reset">
+<th class="slds-text-align_right" scope="col" style="width:3.25rem">
+<span id="column-group-header" class="slds-assistive-text">Choose a row</span>
+
+</th>
+<th aria-label="Name" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="0">
+<span class="slds-assistive-text">Sort by: </span>
+<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+<span class="slds-truncate" title="Name">Name</span>
+<span class="slds-icon_container slds-icon-utility-arrowdown">
+    <span class="slds-icon slds-icon-text-default slds-is-sortable__icon ">
+  <lightning:buttonIcon iconName="utility:down"  size="small"     variant="bare" alternativeText="View More" onclick="{! c.handleClick }"  />
+    </span>
+    </span>
+</div>
+</a>
+<div class="slds-resizable">
+<input type="range" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-554" max="1000" min="20" tabindex="0" />
+<span class="slds-resizable__handle">
+<span class="slds-resizable__divider"></span>
+</span>
+</div>
+</th>
+<th aria-label="Phone" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="0">
+<span class="slds-assistive-text">Sort by: </span>
+<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+<span class="slds-truncate" title="Account Name">Account Name</span>
+<span class="slds-icon_container slds-icon-utility-arrowdown">
+
+</span>
+</div>
+</a>
+<div class="slds-resizable">
+<input type="range" aria-label="Account Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-555" max="1000" min="20" tabindex="0" />
+<span class="slds-resizable__handle">
+<span class="slds-resizable__divider"></span>
+</span>
+</div>
+</th>
+
+
+
+
+
+</tr>
+</thead>
+<tbody> 
+     <aura:iteration items="{!v.Acc}" var="item" indexVar="itemIndex">
+<tr aria-selected="false" class="slds-hint-parent">
+<td class="slds-text-align_right" role="gridcell">
+  <h3 class="slds-section__title">
+            <button aria-controls="fruitsList"  class="slds-button slds-section__title-action">
+                <span  data-auraId="itemId" onclick="{!c.toggleSection}" data-row-index="{!itemIndex}" >
+                    <lightning:icon iconName="utility:switch"
+                                    size="x-small"
+                                    class="slds-section__title-action-icon slds-button__icon_left"
+                                    alternativeText="button icon" 
+                                    />
+                </span>
+                
+            </button>
+        </h3>
+</td>
+<th scope="row">
+    
+<div class="slds-truncate" title="Acme - 1,200 Widgets">
+<a href="javascript:void(0);" tabindex="0">{!item.Name}</a>
+</div>
+</th>
+<td role="gridcell">
+<div class="slds-truncate" title="Acme">{!item.Phone}</div>
+</td>
+</tr>
+    
+         <aura:if isTrue="{!item.expanded}">
+                  <tr aria-selected="false" class="slds-hint-parent expand">
+    <div class="slds-section ">
+       
+            <p>Apple</p>
+       
+       
+        </div>
+   </tr>
+                </aura:if>
+         
+    </aura:iteration>
+    
+</tbody>
+</table>
+          </lightning:card>
+</aura:component>

@@ -1,0 +1,45 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="global">
+    
+    <div class="waveTabWidth">
+        <lightning:tabset aura:id="waveTabs" class="slds-size--1-of-1">  
+               <lightning:tab title="Financial Accounts">
+                    <aura:set attribute="label">
+                        Financial Accounts
+                    </aura:set>
+                    <wave:waveDashboard dashboardId="0FKP000000001A4OAI" height="900" 
+                                        openLinksInNewWindow="false" showTitle="false"  showHeader="false"/>
+                </lightning:tab>
+               
+                <lightning:tab title="80/20">
+                    <aura:set attribute="label">
+                        80/20
+                    </aura:set>
+                    <wave:waveDashboard dashboardId="0FKP000000001A3OAI" height="900" 
+                                        openLinksInNewWindow="false" showTitle="false"  showHeader="false"/>
+                </lightning:tab>
+             
+            <lightning:tab title="Client Goals">
+                    <aura:set attribute="label">
+                        Client Goals
+                    </aura:set>
+                    <wave:waveDashboard dashboardId="0FKP000000001A6OAI" height="900" 
+                                        openLinksInNewWindow="false" showTitle="false"  showHeader="false"/>
+                </lightning:tab>
+            <lightning:tab title="Activities">
+                    <aura:set attribute="label">
+                        Activities
+                    </aura:set>
+                    <wave:waveDashboard dashboardId="0FKP000000001A5OAI" height="900" 
+                                        openLinksInNewWindow="false" showTitle="false"  showHeader="false"/>
+                </lightning:tab>
+             <lightning:tab title="Client List">
+                    <aura:set attribute="label">
+                        Client List
+                    </aura:set>
+                    <wave:waveDashboard dashboardId="0FKP000000001A2OAI" height="900" 
+                                        openLinksInNewWindow="false" showTitle="false" showHeader="false" />
+                </lightning:tab>
+        </lightning:tabset>
+    </div>
+
+</aura:component>

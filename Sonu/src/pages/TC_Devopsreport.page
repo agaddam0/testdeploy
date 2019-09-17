@@ -1,0 +1,365 @@
+<apex:page controller="TC_DevopsQuestionController" applyBodyTag="false" setup="false" sidebar="false" showHeader="false" renderAs="pdf">
+    <head>
+              <!--  <style type="text/css" media="print">
+                    @page {
+                    	padding: 3cm 3cm 2cm 3cm;
+                        @top-center {
+                   			content: element(header);
+                    		
+                        }
+                        @bottom-left {
+                        	content: element(footer);
+                        }
+                    }
+                        div.header {
+                        padding: 10px;
+                        position: running(header);
+                        }
+                        div.footer {
+                        display: block;
+                        padding: 10px;
+                        position: running(footer);
+                        }
+                        .pagenumber:before {
+                        content: counter(page);
+                        }
+                        .pagecount:before {
+                        content: counter(pages);
+                        }
+                    
+                    
+                    </style>-->
+        
+        <style type="text/css" media="print">
+                                 
+            div.header {
+            display: block; text-align: center; 
+            position: running(header);
+            }
+            div.footer {
+            display: block; text-align: center;
+            position: running(footer);
+            }
+            @page {
+            @top-center { content: element(header) }
+            }
+            @page { 
+            @bottom-center { content: element(footer) }
+            }
+                        
+                    </style>
+              </head>
+    <div class="header">
+    	<img style = "height:70px;width:705px;" src="{!$Resource.TC_devopsfullheader}"/>
+    </div>
+        <div class="footer">
+      <img style = "height:70px;width:705px;" src="{!$Resource.TC_devopsfullfooter}"/>   
+    </div> 
+        <div class="content"  style = "margin-top:50px;padding-top:50px;">
+            <apex:form >
+                <apex:pageBlock >
+                    <table class="table1" style="border: 1px solid black;width:100%;">
+                        <tr>
+                            <th class="th1" style="border: 1px solid black;text-align: center;" colspan = "4">Contact Details</th>
+                        </tr>
+                        <tr>
+                            <td class="th1" style = "width:25%;border: 1px solid black;">Name</td> 
+                            <td class="th1" style = "width:25%;border: 1px solid black;">{!surrec.Lead_Name__r.name}</td>
+                            <td class="th1" style = "width:25%;border: 1px solid black;">Email</td>
+                            <td class="th1" style = "width:25%;border: 1px solid black;">{!surrec.Lead_Name__r.Email}</td>
+                            
+                        </tr>
+                        <tr>
+                            <td class="th1" style = "width:25%;border: 1px solid black;">Company</td> 
+                            <td class="th1" style = "width:25%;border: 1px solid black;">{!surrec.Lead_Name__r.company}</td>
+                            <td class="th1" style = "width:25%;border: 1px solid black;">Phone</td>
+                            <td class="th1" style = "width:25%;border: 1px solid black;">{!surrec.Lead_Name__r.phone}</td>
+                            
+                        </tr>
+                        <tr>
+                            <td class="th1" style = "width:25%;border: 1px solid black;">City</td> 
+                            <td class="th1" style = "width:25%;border: 1px solid black;">{!surrec.Lead_Name__r.city}</td>
+                            <td class="th1" style = "width:25%;border: 1px solid black;">Survey Date-Time</td>
+                            <td class="th1" style = "width:25%;border: 1px solid black;">{!surrec.Lead_Name__r.createddate}</td>
+                            
+                        </tr>
+                        <tr>
+                            <th class="th1" style="text-align: center;border: 1px solid black;" colspan = "2">Over All Maturity</th>
+                            <th class="th1" style="text-align: center;border: 1px solid black;" colspan = "4">{!surrec.Over_all_Maturity_Level__c}</th>
+                            
+                        </tr>
+                    </table>
+                    <br/>
+                    <br/>
+                    <table class="table1" style="border: 1px solid black;width:100%">
+                        <tr>
+                            <th class="th1" style = "text-align: center;border: 1px solid black;" colspan = "6">Maturity Level stand against each vector</th>
+                        </tr>
+                        <tr>
+                            <th class="th1" style="border: 1px solid black;">Step 5: Predictable Continuous Delivery with 1 or more <br/> releases/day with IT deploying and Business releasing.</th>
+                            <apex:outputText value="" rendered="{!cultureCount == 4}">
+                                <td class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText>
+                            <apex:outputText value="" rendered="{!cultureCount != 4}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!MeasurementCount == 4}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!MeasurementCount != 4}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!TechnicalCount == 4}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!TechnicalCount != 4}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!ProcessCount == 4}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!ProcessCount != 4}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                        </tr>
+                        <tr>
+                            <th class="th1" style="border: 1px solid black;" >Step 4: Automation of Version Control, Testing, Deploying,<br/> and Releasing</th>
+                            <apex:outputText value="" rendered="{!cultureCount == 3}">
+                                <td class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText>
+                            <apex:outputText value="" rendered="{!cultureCount != 3}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!MeasurementCount == 3}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!MeasurementCount != 3}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!TechnicalCount == 3}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!TechnicalCount != 3}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!ProcessCount == 3}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!ProcessCount != 3}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                        </tr>
+                        <tr>
+                            <th class="th1" style="border: 1px solid black;">Step 3: Agile Releases (stories moved to production at least <br/> monthly; preferably, each sprint)</th>
+                            <apex:outputText value="" rendered="{!cultureCount == 2}">
+                                <td class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText>
+                            <apex:outputText value="" rendered="{!cultureCount != 2}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!MeasurementCount == 2}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!MeasurementCount != 2}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!TechnicalCount == 2}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!TechnicalCount != 2}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!ProcessCount == 2}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!ProcessCount != 2}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                        </tr>
+                        <tr>
+                            <th class="th1" style="border: 1px solid black;">Step 2: Version Control System is Source of Truth across all environments: devs, <br/> admin, hot-fix, test, integration, production, scratch orgs, sandboxes, etc.</th>
+                            <apex:outputText value="" rendered="{!cultureCount == 1}">
+                                <td class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText>
+                            <apex:outputText value="" rendered="{!cultureCount != 1}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!MeasurementCount == 1}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!MeasurementCount != 1}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!TechnicalCount == 1}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!TechnicalCount != 1}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!ProcessCount == 1}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!ProcessCount != 1}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                        </tr>
+                        <tr>
+                            <th class="th1" style="border: 1px solid black;">Step 1: Salesforce Production Org = Source of Truth; component/feature based <br/> ad hoc releases</th>
+                            <apex:outputText value="" rendered="{!cultureCount == 0}">
+                                <td class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText>
+                            <apex:outputText value="" rendered="{!cultureCount != 0}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!MeasurementCount == 0}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!MeasurementCount != 0}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!TechnicalCount == 0}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!TechnicalCount != 0}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                            <apex:outputText value="" rendered="{!ProcessCount == 0}">
+                                <td id = "S5measurement" class="th1" style="border: 1px solid black;"><img style ="height:60px;width:60px;" src="{!$Resource.TC_DevopsreportTick}"/></td>
+                            </apex:outputText> 
+                            <apex:outputText value="" rendered="{!ProcessCount != 0}">
+                                <td class="th1" style="border: 1px solid black;"></td>
+                            </apex:outputText>
+                            
+                        </tr>
+                        <tr>
+                            <th class="th1" style = "text-align: center;border: 1px solid black;">VECTORS -></th>
+                            <td class="th1" style="font-size: 11px;border: 1px solid black;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CULTURE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+                            <td class="th1" style="font-size: 11px;border: 1px solid black;">MEASUREMENT</td>
+                            <td class="th1" style="font-size: 11px;border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;TECHNICAL&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+                            <td class="th1" style="font-size: 11px;border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            
+                            
+                        </tr>
+                    </table>
+                    <br/>
+                    <br/>
+                    <table style="margin-top: 162px;">
+                        <tr>
+                            <th class="th1" style="text-align: center;border: 1px solid black;" colspan = "7">Questions and Responses</th>
+                        </tr>
+                        <tr>
+                            <th class="th1" style="border: 1px solid black;" colspan = "1">Maturity Level-Group</th>
+                            <th class="th1" style="border: 1px solid black;" colspan = "5">Question</th> 
+                            <th class="th1" style="border: 1px solid black;;" colspan = "1">Answer</th>
+                        </tr>
+                        
+                        <apex:repeat var="resde" value="{!BLlist1}">
+                            <tr>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.Maturity_Level__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "5">
+                                    <apex:outputText value="{!resde.ResponseQuestion__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.ResponseAnswer__c }"></apex:outputText><br/>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <apex:repeat var="resde" value="{!BLlist2}">
+                            <tr>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.Maturity_Level__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "5">
+                                    <apex:outputText value="{!resde.ResponseQuestion__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.ResponseAnswer__c }"></apex:outputText><br/>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <apex:repeat var="resde" value="{!BLlist3}">
+                            <tr>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.Maturity_Level__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "5">
+                                    <apex:outputText value="{!resde.ResponseQuestion__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.ResponseAnswer__c }"></apex:outputText><br/>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <apex:repeat var="resde" value="{!BLlist4}">
+                            <tr>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.Maturity_Level__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "5">
+                                    <apex:outputText value="{!resde.ResponseQuestion__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.ResponseAnswer__c }"></apex:outputText><br/>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <apex:repeat var="resde" value="{!BLlist5}">
+                            <tr>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.Maturity_Level__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "5">
+                                    <apex:outputText value="{!resde.ResponseQuestion__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.ResponseAnswer__c }"></apex:outputText><br/>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <apex:repeat var="resde" value="{!BLlist6}">
+                            <tr>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.Maturity_Level__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "5">
+                                    <apex:outputText value="{!resde.ResponseQuestion__c}"></apex:outputText><br/>
+                                </td>
+                                <td class="th1" style="border: 1px solid black;" colspan = "1">
+                                    <apex:outputText value="{!resde.ResponseAnswer__c }"></apex:outputText><br/>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <th class="th1" style = "text-align: center;border: 1px solid black;" colspan = "7">To schedule a conversation at Dreamforce about these results, send an email to <a>chavens@teksystems.com</a>                             
+                            </th>
+                        </tr>
+                        
+                    </table>
+                    
+                </apex:pageBlock>
+            </apex:form>
+            </div>
+        
+        
+
+</apex:page>

@@ -1,0 +1,47 @@
+.THIS .footer {
+  
+margin-left: 44px;
+    margin-top: 5px;
+     
+}
+.THIS.footermain
+{
+ background-color :#021a32;
+    margin-top: -10px;
+}
+.THIS .Link{
+    float: right;
+}
+
+.THIS .column {
+     float: left;
+    width: 2.8%;
+    padding: 1px;
+    margin-left: 32px;
+   
+}
+
+.THIS.rowMain {
+  background-color : #021a32;
+  width: 100%; 
+    padding-top: 8px;
+    
+}
+
+
+/* Clearfix (clear floats) */
+.THIS .row::after {
+  background-color : #021a32;
+  content: "";
+  clear: both;
+  display: table;
+}
+.THIS .row{
+    
+  margin-left: 100px;
+}
+.THIS .footer1{
+background:#021a32;
+margin-left: 400px;
+    
+}

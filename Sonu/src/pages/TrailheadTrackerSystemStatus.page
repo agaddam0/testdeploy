@@ -1,0 +1,140 @@
+<apex:page sidebar="false" showHeader="false" title="Trailhead Tracker System Status" cache="true"  
+           standardStylesheets="true" controller="TrailheadTrackerSystemStatusController">
+       
+    <style>
+        .slds-scope [hidden], .slds-scope template {
+        display: block;
+        }
+        .content {
+        min-height: calc(100vh - 53px);
+        }
+        .footer {
+        height: 50px;
+        }
+        
+        
+        
+    </style>
+    
+    <apex:slds />
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        
+        <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <div role="status" class="slds-spinner slds-spinner_large slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </apex:facet>
+        </apex:actionStatus>
+        
+        <div class="slds-scope">
+            <div class="content">
+                <article class="slds-border_bottom">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-custom">
+                                    <svg aria-hidden="true" class="slds-icon">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#custom')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">System Status</span>
+                                </span>
+                                
+                            </div>
+                            <div class="slds-media__body">
+                                <h2>
+                                    <span class="slds-text-heading_medium">System Status</span>
+                                    <br/> 
+                                    
+                                </h2>
+                            </div>
+                        </header>
+                        <div class="slds-no-flex">
+                            <a class="slds-button slds-button_neutral" href="/trailheadtracker/trailheadtrackerhome">Back to Home</a>
+                        </div>
+                    </div>
+                </article>
+                
+                <article class="slds-card slds-m-around_small">
+                    <apex:outputPanel id="leaderboardFiltersPanel" >
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer  ">
+                            <thead>
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate " title="DateTime">DateTime</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-align_absolute-center" title="Status">Status</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-align_absolute-center " title="ExtendedStatus">ExtendedStatus</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-align_absolute-center " title="TotalJobItems">TotalJobItems</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-align_absolute-center " title="NumberOfErrors">NumberOfErrors</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <apex:repeat value="{!batchJobsList}" var="batchJobsVar">
+                                    <tr>
+                                        <td data-label="DateTime">
+                                            <div class="slds-truncate">{!batchJobsVar.CreatedDate}</div>
+                                        </td>
+                                        <td data-label="Status">
+                                            <div class="slds-align_absolute-center ">{!batchJobsVar.Status}</div>
+                                        </td>
+                                        <td data-label="ExtendedStatus">
+                                            <div class="slds-align_absolute-center">{!batchJobsVar.ExtendedStatus}</div>
+                                        </td>
+                                        <td data-label="TotalJobItems">
+                                            <div class="slds-align_absolute-center">{!batchJobsVar.TotalJobItems}</div>
+                                        </td>
+                                        <td data-label="NumberOfErrors">
+                                            <div class="slds-align_absolute-center">{!batchJobsVar.NumberOfErrors}</div>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                
+                            </tbody>
+                            
+                        </table>
+                    </apex:outputPanel>
+                </article>
+                
+            </div>
+            
+            
+            
+            <div class="footer">
+                <div class="slds-grid slds-wrap slds-border_top slds-p-around_small" >
+                    <div class="slds-col slds-size_4-of-12">
+                        <span style="float: left;">
+                            Need Help?&nbsp;<a href="mailTo:snandan@teksystems.com" target="_blank">Contact</a>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <span class="slds-align_absolute-center">
+                            Trailhead Tracker
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <span style="float: right;">
+                            Shashwat Nandan&nbsp;|&nbsp;TEKsystems
+                        </span>
+                    </div>
+                </div>
+                
+                
+            </div> 
+            
+        </div>
+        
+    </html>
+</apex:page>

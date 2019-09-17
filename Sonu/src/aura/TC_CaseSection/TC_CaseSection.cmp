@@ -1,0 +1,70 @@
+<aura:component controller="TC_CaseSectionController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+	 <aura:attribute name="openCase" type="List"/>
+    <aura:attribute name="closedCase" type="List"/>
+      <aura:attribute name="message" type="String" />
+    <aura:attribute name="displayTable" type="Boolean" default="false"/>
+    <aura:attribute name="fieldData" type="List" default='[]'/>
+    <aura:attribute name="fieldNames" type="String"  default="Status,CaseNumber,CreatedDate,Priority,Description,Type"/>    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="activeSections" type="List" default="['ClosedCases','OpenCases']" />
+     <div style = "background-color: cadetblue;">
+    <lightning:accordion aura:id="accordion"  activeSectionName="{!v.activeSections}" allowMultipleSectionsOpen="true">
+        <lightning:accordionSection name="OpenCases" label="Open Cases">           
+            <div class="slds">  
+                  {!v.message}
+                <aura:if isTrue="{!v.displayTable}">
+                <table class="slds-table slds-table--bordered slds-table--striped">
+                    <thead>
+                        <tr>
+                            <aura:iteration items="{!v.fieldData}" var="field">
+                                <th scope="col"><span class="slds-truncate">{!field}</span></th>
+                            </aura:iteration>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.openCase}" var="ocase" >
+                            <tr>
+                                
+                                <aura:iteration items="{!v.fieldData}" var="field">
+                                    <td><c:TC_SubComponentOfCaseSection objectName="{!ocase}" fieldName="{!field}" /></td>
+                                </aura:iteration>
+                                
+                            </tr>
+                        </aura:iteration>        
+                    </tbody>
+                </table>
+                </aura:if>
+            </div>  
+        </lightning:accordionSection>
+        
+        <lightning:accordionSection name="ClosedCases" label="Closed Cases">            
+            <div class="slds"> 
+                  {!v.message}
+                <aura:if isTrue="{!v.displayTable}">
+                <table class="slds-table slds-table--bordered slds-table--striped">
+                    <thead>
+                        <tr>
+                            <aura:iteration items="{!v.fieldData}" var="field">
+                                <th scope="col"><span class="slds-truncate">{!field}</span></th>
+                            </aura:iteration>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.closedCase}" var="ccase" >
+                            <tr>
+                                
+                                <aura:iteration items="{!v.fieldData}" var="field">
+                                    <td><c:TC_SubComponentOfCaseSection objectName="{!ccase}" fieldName="{!field}" /></td>
+                                </aura:iteration>
+                                
+                            </tr>
+                        </aura:iteration>        
+                    </tbody>
+                </table>
+                </aura:if>
+            </div>             
+        </lightning:accordionSection>
+        
+    </lightning:accordion>
+         </div>
+</aura:component>

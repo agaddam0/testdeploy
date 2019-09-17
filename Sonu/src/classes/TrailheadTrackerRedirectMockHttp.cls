@@ -1,0 +1,39 @@
+@isTest
+global class TrailheadTrackerRedirectMockHttp implements HttpCalloutMock {
+    
+    boolean checkRedirect;
+    public TrailheadTrackerRedirectMockHttp()
+    {
+        checkRedirect = false;
+    }
+    // Implement this interface method
+    global HTTPResponse respond(HTTPRequest req) {
+        // Optionally, only send a mock response for a specific endpoint
+        // and method.
+        
+        String body = '<div class=\'user-information__achievements-data\' data-test-badges-count>27</div>'+
+            '<div class=\'user-information__achievements-data\' data-test-points-count>34,425</div>'+
+            '<div class=\'user-information__achievements-data\' data-test-trails-count>1</div>'+
+            '<img class="user-information__avatar-img" src="/assets/astro-vatar-aea32d8b76aaf20630d792922308031ac971cb5597042217981872707d435280.svg" alt="Astro vatar" width="155" height="155" />'+
+            '<div data-react-class="profile/UserBio" data-react-props="{&quot;full_name&quot;:&quot;RISHABH JHA&quot;,&quot;work_info&quot;:&quot;Teksystems Global Services Private Limited&quot;,&quot;bio&quot;:null}"></div>'+
+            '<div data-react-class="BadgesPanel" data-react-props="{&quot;badges&quot;:'+
+            '[{'+           
+            '&quot;user_id&quot;:6269067,&quot;api_name&quot;:&quot;lightning_app_builder&quot;,&quot;state&quot;:&quot;Completed&quot;,&quot;last_attempted_at&quot;:&quot;2019-01-28T02:42:18.272-08:00&quot;,&quot;finished_at&quot;:&quot;2019-01-28T02:42:20.046-08:00&quot;,&quot;created_at&quot;:&quot;2019-01-28T02:09:14.769-08:00&quot;,&quot;updated_at&quot;:&quot;2019-01-28T02:42:20.128-08:00&quot;,&quot;type&quot;:&quot;Th::UserModule&quot;,&quot;drm_synced&quot;:true,&quot;drm_last_sync_attempt&quot;:&quot;2019-01-28T03:02:00.411-08:00&quot;,&quot;terms_accepted_at&quot;:null,&quot;terms_version&quot;:null,&quot;path&quot;:&quot;https://trailhead.salesforce.com/content/learn/modules/lightning_app_builder&quot;,&quot;badge_type&quot;:&quot;module&quot;,&quot;icon_url&quot;:&quot;https://res.cloudinary.com/hy4kyit2a/f_auto,fl_lossy,q_70/learn/modules/lightning_app_builder/e74ff600f7c04071af20c5d1e9686042_badge.png&quot;,&quot;title&quot;:&quot;Lightning App Builder&quot;,&quot;progress&quot;:100,&quot;tags&quot;:[&quot;module&quot;],&quot;completed_at&quot;:&quot;2019-01-28&quot;,&quot;points&quot;:2100,&quot;employee&quot;:false,&quot;private&quot;:false,&quot;linkedin_share&quot;:null,&quot;google_share&quot;:{&quot;contenturl&quot;:&quot;https://trailhead.salesforce.com/content/learn/modules/lightning_app_builder&quot;,&quot;clientid&quot;:&quot;567293635236-pni7pm941i8p6td5380rnpq9ivkut5vr.apps.googleusercontent.com&quot;,&quot;cookiepolicy&quot;:&quot;single_host_origin&quot;,&quot;prefilltext&quot;:&quot;Just earned the Lightning App Builder badge on Trailhead, the fun way to learn Salesforce!&quot;,&quot;calltoactionurl&quot;:&quot;https://trailhead.salesforce.com/content/learn/modules/lightning_app_builder&quot;},&quot;twitter_share&quot;:&quot;http://twitter.com/share?url=https%3A%2F%2Ftrailhead.salesforce.com%2Fcontent%2Flearn%2Fmodules%2Flightning_app_builder\u0026text=Just+earned+the+Lightning+App+Builder+badge+on+%40Trailhead+and+you+should+too%21\u0026title=Lightning+App+Builder&quot;,&quot;facebook_share&quot;:&quot;https://www.facebook.com/dialog/share?app_id=140586622674265\u0026display=popup\u0026href=https%3A%2F%2Ftrailhead.salesforce.com%2Fcontent%2Flearn%2Fmodules%2Flightning_app_builder\u0026quote=Just+earned+the+Lightning+App+Builder+badge+on+%40Salesforce+Trailhead%21+Beary+proud+of+this+badge%21+Goat+check+it+out%2C+owl+wait%21&quot;},'+
+            '{&quot;user_id&quot;:6269067,&quot;api_name&quot;:&quot;trailhead_basics&quot;,&quot;state&quot;:&quot;Completed&quot;,&quot;last_attempted_at&quot;:&quot;2019-01-10T04:43:47.524-08:00&quot;,&quot;finished_at&quot;:&quot;2019-01-10T04:43:47.523-08:00&quot;,&quot;created_at&quot;:&quot;2019-01-10T04:24:31.403-08:00&quot;,&quot;updated_at&quot;:&quot;2019-01-10T04:43:47.546-08:00&quot;,&quot;type&quot;:&quot;Th::UserModule&quot;,&quot;drm_synced&quot;:true,&quot;drm_last_sync_attempt&quot;:&quot;2019-01-10T04:45:37.057-08:00&quot;,&quot;terms_accepted_at&quot;:null,&quot;terms_version&quot;:null,&quot;path&quot;:&quot;https://trailhead.salesforce.com/content/learn/modules/trailhead_basics&quot;,&quot;badge_type&quot;:&quot;module&quot;,&quot;icon_url&quot;:&quot;https://res.cloudinary.com/hy4kyit2a/f_auto,fl_lossy,q_70/learn/modules/trailhead_basics/c5e0b83a46f2437a3acdbd0790466bf0_badge.png&quot;,&quot;title&quot;:&quot;Trailhead Basics&quot;,&quot;progress&quot;:100,&quot;tags&quot;:[&quot;module&quot;],&quot;completed_at&quot;:&quot;2019-01-10&quot;,&quot;points&quot;:300,&quot;employee&quot;:false,&quot;private&quot;:false,&quot;linkedin_share&quot;:null,&quot;google_share&quot;:{&quot;contenturl&quot;:&quot;https://trailhead.salesforce.com/content/learn/modules/trailhead_basics&quot;,&quot;clientid&quot;:&quot;567293635236-pni7pm941i8p6td5380rnpq9ivkut5vr.apps.googleusercontent.com&quot;,&quot;cookiepolicy&quot;:&quot;single_host_origin&quot;,&quot;prefilltext&quot;:&quot;Just earned the Trailhead Basics badge on Trailhead, the fun way to learn Salesforce!&quot;,&quot;calltoactionurl&quot;:&quot;https://trailhead.salesforce.com/content/learn/modules/trailhead_basics&quot;},&quot;twitter_share&quot;:&quot;http://twitter.com/share?url=https%3A%2F%2Ftrailhead.salesforce.com%2Fcontent%2Flearn%2Fmodules%2Ftrailhead_basics\u0026text=Just+earned+the+Trailhead+Basics+badge+on+%40Trailhead+and+you+should+too%21\u0026title=Trailhead+Basics&quot;,&quot;facebook_share&quot;:&quot;https://www.facebook.com/dialog/share?app_id=140586622674265\u0026display=popup\u0026href=https%3A%2F%2Ftrailhead.salesforce.com%2Fcontent%2Flearn%2Fmodules%2Ftrailhead_basics\u0026quote=Just+earned+the+Trailhead+Basics+badge+on+%40Salesforce+Trailhead%21+Beary+proud+of+this+badge%21+Goat+check+it+out%2C+owl+wait%21&quot;},{&quot;id&quot;:4988,&quot;created_at&quot;:&quot;2018-12-21T16:14:08.041-08:00&quot;,&quot;updated_at&quot;:&quot;2018-12-21T16:14:08.041-08:00&quot;,&quot;published&quot;:true,&quot;remote_badge_key&quot;:null,&quot;first_ascent_image_url&quot;:null,&quot;title&quot;:&quot;#QuestYearEVAR &#39;19&quot;,&quot;path&quot;:null,&quot;badge_type&quot;:&quot;event&quot;,&quot;icon_url&quot;:&quot;https://developer.salesforce.com/resource/images/trailhead/badges/community/trailhead_community_questyearevar.png&quot;,&quot;progress&quot;:100,&quot;tags&quot;:[&quot;event&quot;],&quot;employee&quot;:false,&quot;private&quot;:false,&quot;completed_at&quot;:&quot;2018-12-21&quot;,&quot;end_time&quot;:&quot;2019-01-31T23:59:00.000-08:00&quot;}],&quot;filters&quot;:[{&quot;label&quot;:&quot;All Badges&quot;,&quot;filter&quot;:&quot;all&quot;,&quot;active&quot;:true},{&quot;label&quot;:&quot;Superbadges&quot;,&quot;filter&quot;:&quot;superbadge&quot;,&quot;active&quot;:false},{&quot;label&quot;:&quot;Modules&quot;,&quot;filter&quot;:&quot;module&quot;,&quot;active&quot;:false},{&quot;label&quot;:&quot;Projects&quot;,&quot;filter&quot;:&quot;project&quot;,&quot;active&quot;:false},{&quot;label&quot;:&quot;Event/Community&quot;,&quot;filter&quot;:&quot;event&quot;,&quot;active&quot;:false}],&quot;sharing&quot;:false}"></div>';
+        
+        // Create a fake response
+        HttpResponse res = new HttpResponse();
+        if(!checkRedirect)
+        {
+        	res.setHeader('Location', 'application/json');
+            checkRedirect = true;
+        }
+        else
+        {
+            res.setHeader('Location', '');     
+        }       
+        res.setBody(body);
+        res.setStatusCode(301);
+        return res;
+    }
+}

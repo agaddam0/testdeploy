@@ -1,0 +1,4 @@
+<aura:component >
+<c:TC_DevopsQuestion/>
+    <c:TC_DevopsSubComponent/>
+</aura:component>

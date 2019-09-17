@@ -1,0 +1,76 @@
+.THIS .container{
+  position: relative; 
+  max-width: 800px; /* Maximum width */
+  margin: 0 auto; /* Center it */
+}
+.THIS .content {
+  position: absolute; /* Position the background text */
+  bottom: 0; /* At the bottom. Use top:0 to append it to the top */
+  background: rgb(0, 0, 0); /* Fallback color */
+  background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+  color: #f1f1f1; /* Grey text */
+  width: 100%; /* Full width */
+  padding: 20px; /* Some padding */
+}
+.THIS .slds-text-heading_largetitle {
+    background-color: green;
+    background: aqua;
+    border-left: solid #D4D4D4 5px;
+        
+}
+.THIS .slds-m-around_xx-large{
+    height: 0px;
+    width: 0px;
+}
+.THIS .fullNotificationPanel{
+    border-radius: 25px;
+  	background: transparent;
+  	padding: 20px; 
+}
+.THIS .marquee {
+    width: 17em;     
+    height: 10em;     
+    margin: 1em auto;     
+    overflow: hidden;     
+    background: white;
+    background-image: linear-gradient(silver, white);
+	  
+    position: relative;
+    box-sizing: border-box;   
+   
+}
+.THIS .slider{
+     top: 1em;     
+    position: relative;     
+    box-sizing: border-box;     
+    animation: slider 5s linear infinite;    
+    list-style-type: none;     
+    text-align: left;
+    white-space: nowrap;
+    
+    
+    
+}
+.THIS .slider:hover {     
+    animation-play-state: paused; 
+    
+}
+
+@keyframes slider {     
+    0%   { top:   100% }     
+    100% { top: -100% } 
+}
+ 
+.THIS .p {   
+    font-family: helvetica, arial, sans serif;
+}
+
+
+.THIS .blink-one {
+    color:red;
+    
+    animation: blinker-one 0.5s linear infinite;
+       }
+       @keyframes blinker-one {  
+         0% { opacity: 0; }
+       }

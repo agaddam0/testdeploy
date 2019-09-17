@@ -1,0 +1,62 @@
+.THIS .auto
+{
+    background: white;
+    font-size:100px;
+    
+    
+}
+.THIS .Messagebox
+{
+    margin-left:-80px;
+    margin-bottom: 23px;
+    margin-right:30px;
+}
+.THIS.slds-align_absolute-center
+{
+    Padding: 100px;
+    margin-top: 125px;
+}
+.THIS .Answers
+{
+    font-size: 15px;  
+}
+.THIS .Textsize{
+    font-weight : BOLD;
+}
+.THIS .slds-radio .slds-form-element__label{
+    font-size: 17px;
+}
+.THIS .slds-checkbox .slds-form-element__label{
+    font-size: 17px;
+}
+.THIS .slds-modal__footer{
+    margin-top: 7%;
+}
+.THIS .feedback{
+    font-size: 15px;
+    font-weight : BOLD;
+    font-style : italic;
+    margin-left : 18%;
+}
+.THIS .feedback1{
+    font-size : large;
+    font-weight : BOLD;
+    margin-left : 18%;
+    text-align:center; 
+    margin-top: -20px;
+}
+.THIS .feedback2{
+    font-size: 15px;   
+    margin-left : 18%;
+}
+.THIS .feedback3{
+    font-size: 15px;
+    font-weight : BOLD;
+    font-style : italic;
+    margin-left : 18%;
+    margin-top : -10px;	
+}
+.THIS .questionNumber{
+        margin-left: -440px;
+    margin-top: 5px;
+}

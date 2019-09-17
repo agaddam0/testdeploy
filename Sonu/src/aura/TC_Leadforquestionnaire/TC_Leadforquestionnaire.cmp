@@ -1,0 +1,114 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" controller="TC_Leadforquestionnaire" access="global">
+    <aura:attribute name="header" type="String"/>
+    <aura:attribute name="hasFile" type="Boolean" default="false"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+    <aura:attribute name="objectName" type="String"/>
+    <aura:attribute name="recordTypeDeveloperName" type="String"/>
+    <aura:attribute name="fields" type="String"/>
+    <aura:attribute name="fieldData" type="List" default="[]"/>
+    <aura:attribute name="recordTypeId" type="String"/>
+    <aura:attribute name="error" type="String" default=""/>
+    <aura:attribute name="showCmp" type="Boolean" default="false"/>
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="isDisabled" type="boolean"  default="true"/>
+    <aura:attribute name="setVal" type="boolean"  default="false"/>
+    <aura:attribute name="navigate" type="Boolean" default="false"/>
+    <aura:attribute name="recValue" type="String" />
+    <aura:attribute name="emailValue" type="String" />
+    <aura:attribute name="leadName" type="String" />
+    <aura:attribute name="surveyId" type="String" />
+    <aura:attribute name="duplicateLead" type="Boolean" />
+    <aura:attribute name="displayMessage" type="Boolean" default="false" />
+    <aura:attribute name="validate" type="Boolean" default="true" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:if isTrue="{!v.showSpinner}">
+        <lightning:spinner alternativeText="Loading" size="medium" />
+    </aura:if>
+    
+    <aura:if isTrue="{!!empty(v.error)}">
+        <div align="center" class="errorClass">
+            {!v.error}
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.showCmp}">
+        <div class="slds-box slds-brand-band leadClass">
+            <div class="slds-text-heading_medium LeadHeading" align="center">
+                {!v.header}
+            </div>
+            <lightning:recordEditForm
+                                      objectApiName="{!v.objectName}"
+                                      aura:id="devops"
+                                      onsubmit="{!c.onSubmitHandler}"
+                                      onsuccess="{!c.onSuccessHandler}"
+                                      onerror="{!c.onErrorHandler}">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning:messages/>
+                    </div>
+                    <aura:iteration items="{!v.fieldData}" var="field">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning:inputField aura:id="inputfield"  class="customRequired" fieldName="{!field}" onchange="{!c.validation}"/>
+                            
+                        </div>
+                    </aura:iteration>
+                    <aura:if isTrue="{!v.setVal}">
+                        <ui:outputText class= "zipMsg" value="Zip Code should contain 0-9 digits"/>
+                    </aura:if>
+                    <div class="slds-col slds-size_1-of-1">
+                        <div align="center">
+                            <div class="slds-m-around_xx-medium"> 
+                                <aura:if isTrue="{!v.validate}">
+                                    <br/>    <lightning:button variant="brand" label="Save and Proceed to questionnaire"  type="Submit" title="save" onclick="{! c.openModel }" >
+                                    <aura:set attribute="disabled" value="{!v.isDisabled}"/>
+                                    </lightning:button>
+                                    <aura:set attribute="else">
+                                        <br/> <lightning:button variant="brand" label="Save and Proceed to questionnaire"  title="save" onclick="{! c.openModel }" >
+                                            <aura:set attribute="disabled" value="{!v.isDisabled}"/>
+                                        </lightning:button>
+                                    </aura:set>
+                                </aura:if>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </lightning:recordEditForm>
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.isModalOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">            
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    
+                    <lightning:buttonIcon iconName="utility:close"                                          
+                                          onclick="{! c.closeModel }"                                        
+                                          alternativeText="close"        
+                                          variant="bare-inverse"                                          
+                                          class="slds-modal__close"/>                    
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate ">SF DevOps Self-Assessment</h2>                    
+                </header>                
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <aura:if isTrue="{!v.displayMessage}">
+                        <div>
+                            
+                            <p>{!$Label.c.TC_Proceed}</p>
+                            <lightning:button label="Proceed" onclick="{!c.goProceed}">
+                            </lightning:button>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.navigate}">
+                        <c:TC_DevopsQuestion  surveyId="{!v.surveyId}"/>
+                        
+                    </aura:if>                    
+                </div>                
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        
+    </aura:if>
+    
+    
+</aura:component>
